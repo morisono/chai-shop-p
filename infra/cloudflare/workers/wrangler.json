@@ -1,0 +1,7 @@
+{
+  "name": "cloudflare-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for the application",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-01-01"
+}

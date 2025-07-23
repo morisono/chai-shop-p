@@ -1,0 +1,143 @@
+Auth0:
+  BeforeCoding:
+    Terminologies:
+      Tenant:
+        - Config/assets manager (app, connection, userProfile)
+        - Cannot rewrite/reuse after deletion
+        - Lowercase, alphabets, hyphen only
+        - Separate tenant for prod, staging, dev
+      ApplicationType:
+        - RWA, SPA, Native App, M2M (CLI, Daemon, IoT)
+      AuthAPI:
+        - Identity features: login, signup, MFA, token requests, userProfile access
+      ManagementAPI:
+        - CRUD for users, apps, connections
+      Connection:
+        - User source links: DB, social, enterprise (SAML, OIDC), EntraId, GoogleWorkspace, Passwordless
+      Actions:
+        - Former Rules and Hooks
+      Dashboard: Management UI
+
+    AppConfig:
+      - name
+      - description
+      - app_type: native, spa, regular_web, non_interactive
+      - callbacks
+      - allowed_origins
+      - allowed_logout_urls
+      - grant_types: authorization_code, client_credentials, refresh_token
+
+    APIConfig:
+      - name
+      - identifier
+      - signing_alg
+      - token_lifetime
+      - scopes: permissions
+
+  Implementation:
+    PasskeySetup:
+      - Enable: Authentication > Database > Username-Password-Authentication > Authentication Method
+      - Use Auth0 DB: Authentication > Database > DB name > Custom Database
+      - Universal Login: Enable New Universal Login via Branding > Universal Login > Advanced Options
+      - Disable Custom login page functions
+      - Flow: Identifier First (Authentication > Authentication Profile)
+      - Disable username requirement in DB settings
+
+    UniversalLoginNotes:
+      - Classic Login: uses Auth0Lock, no MFA support
+      - Identifier First + Biometrics: enterprise plan only
+
+    AuthFlows:
+      - Authorization Code Flow with PKCE
+      - Authorization Code Flow
+      - Client Credentials Flow
+      - Resource Owner Password Flow (ROPG)
+      - Implicit Flow with Form Post
+
+    SDKPractice:
+      - Auth0Provider: domain, clientId
+      - useAuth0 hook: loginWithRedirect, logout, isAuthenticated, user, getAccessTokenSilently
+      - Root protection: withAuthenticationRequired, isAuthenticated
+
+    CallbackImplementation:
+      - Callback URL handling
+      - Token storage & lifecycle
+      - Silent auth: prompt=none
+      - Refresh Token Rotation via getTokenSilently()
+      - Session management
+
+    Actions:
+      - Set custom claims: role, permission, user_metadata attrs
+      - Login/post-login triggers: api.idToken.setCustomClaim(), api.accessToken.setCustomClaim()
+      - Use namespaces to avoid OIDC claim collision
+      - Dynamic MFA triggers: api.multifactor.enable("any"/"none")
+      - Risk-based access control using fetch, axios; store secrets in event.secrets
+
+    UserManagement:
+      - user_metadata: editable profile data, max 500 chars per field, max 100 fields
+      - app_metadata: system-only access, role, permissions, plan, external IDs
+      - client_metadata: app-related info
+      - Size limit: 1MB total
+      - Optimize by storing pointers instead of full data
+
+    SocialEnterpriseLogin:
+      - Supports Social, SAML, OIDC connections
+
+    Migration:
+      - Automatic/Trickle/Lazy Migration via Custom DB connection "Import Users to Auth0"
+      - Bulk imports via /post_users_imports API and User Import/Export extension
+
+    Security:
+      - Attack protection: Bot detection, IP throttling, brute-force protection, breached password detection
+      - Token authentication & verification
+
+    MFA:
+      - Push notifications: Auth0 Guardian
+      - OTP/TOTP: Google Authenticator, Authy
+      - SMS/Voice: test providers, Twilio for production
+
+    TokenVerificationBackend:
+      - JWKS URI signature verification
+      - Validate issuer (iss), audience (aud), expiration (exp)
+
+    MultiTenant:
+      - Auth0 Organizations support
+      - Multiple tenants handling
+      - Store tenant info in userprofile_metadata
+
+    Microservices:
+      - Use API Gateway pattern
+      - Token validation: Audience, Issuer, Scope, Signature, Expiration
+      - Isolation of auth entities
+
+    UserAccountLinking:
+      - User-initiated linking: /api/v2/users/{primary_user_id}/identities
+      - Required scopes: update:current_user_identities or update:users
+      - Suggested automatic linking options
+
+    CustomDBConnectionDataSync:
+      - Action scripts: Login, Get User, Create, Verify, Change Password, Delete
+      - Trickle Migration enabled
+      - When disabled, always refer to external DB
+
+    OperationsHints:
+      - Allowed Callback URLs
+      - Allowed Web Origins
+      - Allowed Logout URLs
+      - SDK config: auth0-react, auth0-spa-js
+      - Backend local test audience = API ID
+
+    Debugging:
+      - Tenant logs, Monitoring > Logs, Real-time Webtask Logs
+      - Enable DEBUG_MODE in event.secrets
+      - Use HAR files
+      - Auth0 Support Center production check
+      - Official docs & community forum
+
+    DeployCI:
+      - Auth0 Deploy CLI: YAML/JSON config export/import
+      - Terraform Provider: HCL config, dry-run plan support
+
+    LoggingMonitoring:
+      - Log streaming: Splunk, Datadog, AWS EventBridge, Azure Event Grid
+      - Service status: status.auth0.com

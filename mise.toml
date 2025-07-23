@@ -1,0 +1,69 @@
+[tools]
+node = "latest"
+
+[env]
+REPO_ROOT = "{{ exec(command='pwd') }}"
+BUILD_DIR = "{{env.REPO_ROOT}}/public"
+DIST_DIR = "{{env.REPO_ROOT}}/releases"
+ARCHIVE = "project-{{ exec(command='date +%Y%m%d') }}.7z"
+VERSION = "{{ exec(command='grep -E ^VERSION= version.txt | cut -d= -f2') }}"
+
+[tasks.init]
+description = "Initialize directories"
+run = [
+  "mkdir -p \"$BUILD_DIR\" \"$DIST_DIR\""
+]
+
+[tasks.check-git]
+description = "Ensure working tree is clean"
+run = [
+  'test -z "$(git status --porcelain)" || (echo "Uncommitted changes present" && exit 1)'
+]
+
+[tasks.build]
+description = "Compile or prepare artifacts"
+depends = ["init"]
+run = [
+  'echo "Building into $BUILD_DIR..."',
+  'touch "$BUILD_DIR/artifact.bin"'
+]
+
+[tasks.test]
+description = "Run tests"
+run = [
+  'echo "Running tests..."',
+  'true'
+]
+
+[tasks.archive]
+description = "Create 7z archive of build"
+depends = ["build"]
+run = [
+  "echo 'Archiving to ${DIST_DIR}/${ARCHIVE}...'",
+  'test -f "$BUILD_DIR/artifact.bin" || (echo "Nothing to archive" && exit 1)',
+  '7z a -t7z -mx=9 "$DIST_DIR/$ARCHIVE" "$BUILD_DIR"'
+]
+
+[tasks.sync]
+description = "Synchronize distribution to remote server via rclone"
+depends = ["archive"]
+run = [
+  'echo "Syncing to remote via rclone..."',
+  'rclone sync "$DIST_DIR" "remote:backup" --progress'
+]
+
+[tasks.release]
+description = "Tag and push release"
+depends = ["check-git", "archive"]
+run = [
+  'if git rev-parse "v$VERSION" >/dev/null 2>&1; then echo "Tag v$VERSION already exists" && exit 1; fi',
+  'git tag -a "v$VERSION" -m "Release $VERSION"',
+  'git push origin "v$VERSION"'
+]
+
+[tasks.clean]
+description = "Remove build and dist"
+run = [
+  'echo "Cleaning..."',
+  'rm -rf "$BUILD_DIR" "$DIST_DIR"'
+]

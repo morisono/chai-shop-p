@@ -1,0 +1,15 @@
+file_upload_security:
+  client_validation:
+    acceptable_mime_types:
+      - "image/jpeg"
+      - "image/png"
+      - "application/pdf"
+
+  server_validation:
+    verify_content_type:
+      enabled: true
+      strict_checking: true
+      content_type_whitelist:
+        - "image/jpeg"
+        - "image/png"
+        - "application/pdf"

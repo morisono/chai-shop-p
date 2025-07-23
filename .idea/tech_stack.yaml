@@ -1,0 +1,83 @@
+general:
+- auto_coding: orval
+
+frontend:
+- build: vite
+- form_management: react-hook-form
+- validation: zod
+- ui_lib: radix-ui
+- css_lib: tailwindcss
+- linter: eslint
+- formatter: prettier, biomejs
+- git_hooks: husky
+- rendering: react-server-components
+
+interactivity:
+- routing: react-router
+- session_state: react-context-api
+- server_state: jotai
+
+backend:
+- runtime: nodejs, deno
+- api: rest, graph_ql
+- api_test: pactum
+- e2ee_test: playwright
+- unit_test: vitest, react-testing-library
+- db: sqlite
+- orm: drizzle
+- html_mail: nodemailer
+- mail: resend
+
+ui:
+- form: zod
+- editor: tiptap
+- table: react-table
+- map: leaflet
+- data_fetch: tRPC, react-query
+- icon: tabler
+- seo: next-seo
+- time: dayjs
+- animation: framer-motion
+- chart: chart.js
+- search_params: nuqs
+- map: maplibre-gl-js
+- cookie: react-cookie-consent
+
+core_features:
+- auth: auth0, simplewebauthn, remix_auth
+- auth_by_default: passkeys
+- payment: stripe-node,
+- localization: i18next
+- logging: pino
+- monitoring: checkly
+
+
+advanced_features:
+- llm: open_ai gpt-4 api
+- rule_engine: json_logic
+- chat_ui: alibaba/chatui
+- guardrails: portkey-ai
+- agent: openai-agent-sdk
+
+infra:
+- hosting: cloudflare workers
+- storage: cloudflare d1
+- kv_storage: cloudflare kv
+
+utility_tools:
+- node: pnpm
+- cf: wrangler
+- tunnel: ngrok
+- build: mise
+- db_exploration: drizzle-studio, drizzle-kit
+
+integration:
+- cms: sanity
+- oauth: cloudflare/workers-oauth-provider
+- ci_cd: github-actions
+- editor: vscode
+- editor_config: .editorconfig
+- code_quality: sonarqube
+- security: snyk
+- performance: speed-measure-webpack-plugin
+- accessibility: axe

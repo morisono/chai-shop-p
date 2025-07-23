@@ -1,0 +1,19 @@
+User-agent: *
+Disallow: /
+
+User-agent: Hypothetical-LLMBot
+Allow: /
+
+User-agent: *
+Disallow: /private/
+Disallow: /admin/
+Disallow: /members-only/
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /

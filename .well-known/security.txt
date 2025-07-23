@@ -1,0 +1,9 @@
+# Security problems related to this instance should be reported to its administration.
+
+Policy: /SECURITY-POLICY.md
+Contact: mailto:security@example.com
+Encryption: https://keys.openpgp.org/vks/v1/by-fingerprint/1B638BDF10969D627926B8D9F585D0F99E1FB56F
+Canonical:
+Encryption:
+Preferred-Languages: en
+Expires: 2032-05-31T15:00:00.000Z

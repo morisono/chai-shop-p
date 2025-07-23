@@ -1,0 +1,649 @@
+# styling, component rules
+
+metadata:
+  company_name: n8tt
+  contact_department: Customer Service
+  address: Shinjiku, Tokyo
+  email: contact@example.com
+  phone: 01-2345-6789
+
+theme:
+  colors:
+     main: '#e5e2df'
+
+profiles:
+  configuration:
+    font:
+      primary: 'Bebus-Regular'
+      secondary: 'SF-Pro-Bold'
+      tertiary: 'M-PLUS-1p-Regular'
+    colors:
+      lightMode:
+        light: '#f9fafb'
+        lightgray: '#e5e5e5'
+        gray: '#b8b8b8'
+        darkgray: '#4e4e4e'
+        dark: '#2b2b2b'
+        secondary: '#008080'
+        tertiary: '#84a59d'
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: '#fff23688'
+      darkMode:
+        light: '#161618'
+        lightgray: '#393639'
+        gray: '#646464'
+        darkgray: '#d4d4d4'
+        dark: '#ebebec'
+        secondary: '#008080'
+        tertiary: '#84a59d'
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: '#b3aa0288'
+
+
+  common_redirect:
+    successfully:
+      url: "/redirect/success"
+      layout: "minimal"
+      components:
+        - type: "message"
+          content: "Operation successful"
+        - type: "button"
+          label: "Continue"
+          action: "navigate_home"
+        - type: "animation"
+          effect: "fadeIn"
+      metadata:
+        tracking: "redirect_success_event"
+        seo: "canonical /redirect/success"
+    congratulation:
+      url: "/redirect/congratulations"
+      layout: "celebration"
+      components:
+        - type: "message"
+          content: "Congratulations! Your operation was successful."
+        - type: "visual_effect"
+          effect: "confetti"
+        - type: "button"
+          label: "Explore"
+          action: "navigate_explore"
+      metadata:
+        tracking: "redirect_congratulations_event"
+        seo: "canonical /redirect/congratulations"
+    fail_to_fetch:
+      url: "/redirect/error"
+      layout: "error"
+      components:
+        - type: "message"
+          content: "Failed to fetch data."
+        - type: "button"
+          label: "Retry"
+          action: "trigger_retry"
+        - type: "link"
+          label: "Help"
+          url: "/help/troubleshooting"
+      metadata:
+        tracking: "redirect_error_event"
+        seo: "canonical /redirect/error"
+  auth:
+    granted_authorization:
+      url: "/auth/authorized"
+      layout: "auth"
+      components:
+        - type: "header"
+          content: "Welcome Back"
+        - type: "session_details"
+          data_source: "active_session_api"
+        - type: "navigation"
+          links:
+            - label: "Dashboard"
+              url: "/dashboard"
+            - label: "Profile"
+              url: "/profile"
+      metadata:
+        auth_method: "session_token"
+        tracking: "auth_granted_event"
+    create_account:
+      url: "/auth/create"
+      layout: "auth"
+      components:
+        - type: "registration_form"
+          fields:
+            - name: "username"
+              type: "text"
+            - name: "email"
+              type: "email"
+            - name: "password"
+              type: "password"
+          validations: "live"
+        - type: "captcha"
+          provider: "reCAPTCHA_v3"
+        - type: "info_banner"
+          content: "Create your account securely."
+      metadata:
+        auth_method: "self_register"
+        tracking: "auth_create_event"
+    sign_in:
+      url: "/auth/signin"
+      layout: "auth"
+      components:
+        - type: "login_form"
+          fields:
+            - name: "username"
+              type: "text"
+            - name: "password"
+              type: "password"
+          validations: "instant"
+        - type: "social_auth"
+          providers:
+            - "Google"
+            - "Facebook"
+            - "Twitter"
+        - type: "password_recovery_link"
+          url: "/auth/recover"
+      metadata:
+        auth_method: "credential_based"
+        tracking: "auth_signin_event"
+  error_handling:
+    env_missing:
+      url: "/error/env-missing"
+      layout: "error"
+      components:
+        - type: "error_message"
+          content: "Environment configuration missing."
+        - type: "documentation_link"
+          url: "/docs/setup"
+        - type: "action_button"
+          label: "Retry Setup"
+          action: "initiate_setup"
+      metadata:
+        severity: "critical"
+        tracking: "error_env_missing_event"
+    http_errors:
+      HTTP400:
+        url: "/error/400"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "400"
+          - type: "error_message"
+            content: "Bad Request."
+      HTTP401:
+        url: "/error/401"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "401"
+          - type: "error_message"
+            content: "Unauthorized access."
+      HTTP403:
+        url: "/error/403"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "403"
+          - type: "error_message"
+            content: "Forbidden."
+      HTTP404:
+        url: "/error/404"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "404"
+          - type: "error_message"
+            content: "Page Not Found."
+      HTTP500:
+        url: "/error/500"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "500"
+          - type: "error_message"
+            content: "Internal Server Error."
+      HTTP501:
+        url: "/error/501"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "501"
+          - type: "error_message"
+            content: "Not Implemented."
+      HTTP502:
+        url: "/error/502"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "502"
+          - type: "error_message"
+            content: "Bad Gateway."
+      HTTP503:
+        url: "/error/503"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "503"
+          - type: "error_message"
+            content: "Service Unavailable."
+      HTTP520:
+        url: "/error/520"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "520"
+          - type: "error_message"
+            content: "Unknown Error."
+      HTTP521:
+        url: "/error/521"
+        layout: "error"
+        components:
+          - type: "error_code"
+            value: "521"
+          - type: "error_message"
+            content: "Web Server Is Down."
+  notification_center:
+    url: "/notifications"
+    layout: "dashboard"
+    components:
+      - type: "notification_list"
+        source: "notification_api"
+      - type: "filter_panel"
+        options:
+          - "All"
+          - "Unread"
+          - "Mentions"
+          - "Alerts"
+      - type: "search_bar"
+        placeholder: "Search notifications..."
+      - type: "action_button"
+        label: "Mark all as read"
+        action: "mark_all_read"
+    metadata:
+      tracking: "notifications_view_event"
+      real_time_updates: true
+  profile:
+    url: "/profile"
+    layout: "profile"
+    components:
+      - type: "profile_overview"
+        data_source: "user_profile_api"
+      - type: "activity_feed"
+        source: "user_activity_api"
+      - type: "settings_link"
+        url: "/profile/settings"
+      - type: "customization_panel"
+        options:
+          - "Avatar Upload"
+          - "Theme Selection"
+      - type: "recent_activity"
+        display: "carousel"
+    metadata:
+      tracking: "profile_view_event"
+  profiles:
+    url: "/profile"
+    layout: "grid"
+    components:
+      - type: "profile_list"
+        source: "profiles_api"
+      - type: "filter_bar"
+        filters:
+          - "Username"
+          - "Location"
+          - "Interests"
+      - type: "pagination"
+        configuration:
+          items_per_page: 20
+          current_page: 1
+    metadata:
+      tracking: "profiles_list_event"
+  event:
+    url: "/event"
+    layout: "event"
+    components:
+      - type: "trending_topics"
+        data_source: "trending_api"
+      - type: "categories_list"
+        options:
+          - "Technology"
+          - "Lifestyle"
+          - "Entertainment"
+          - "Business"
+      - type: "search_bar"
+        placeholder: "Discover content..."
+      - type: "featured_content"
+        display: "carousel"
+      - type: "recommendations"
+        algorithm: "personalized"
+    metadata:
+      tracking: "explore_page_event"
+  forum:
+    discussion:
+      url: "/forum/discussion"
+      layout: "forum"
+      components:
+        - type: "thread_list"
+          source: "forum_api"
+        - type: "sort_options"
+          options:
+            - "Latest"
+            - "Popular"
+            - "Unanswered"
+        - type: "category_filter"
+          options:
+            - "General"
+            - "Support"
+            - "Development"
+        - type: "new_thread_button"
+          action: "open_thread_creation_modal"
+      sub_forums:
+        general:
+          url: "/forum/discussion/general"
+          components:
+            - type: "thread_list"
+              source: "forum_general_api"
+            - type: "guidelines"
+              content: "Forum rules and guidelines"
+        support:
+          url: "/forum/discussion/support"
+          components:
+            - type: "thread_list"
+              source: "forum_support_api"
+            - type: "faq_link"
+              url: "/help/faq"
+        development:
+          url: "/forum/discussion/development"
+          components:
+            - type: "thread_list"
+              source: "forum_development_api"
+            - type: "code_snippets"
+              display: "collapsible"
+    metadata:
+      tracking: "forum_view_event"
+  platform:
+    features:
+      url: "/platform/features"
+      layout: "info"
+      components:
+        - type: "feature_overview"
+          content: "Comprehensive list of platform features"
+        - type: "detailed_features"
+          format: "accordion"
+        - type: "interactive_demo"
+          action: "launch_demo_mode"
+    security:
+      url: "/platform/security"
+      layout: "info"
+      components:
+        - type: "security_features"
+          list:
+            - "Encryption"
+            - "Multi-factor Authentication"
+            - "Audit Logging"
+        - type: "compliance_reports"
+          links:
+            - label: "ISO 27001"
+              url: "/compliance/iso27001"
+            - label: "SOC 2"
+              url: "/compliance/soc2"
+    pricing:
+      url: "/platform/pricing"
+      layout: "pricing"
+      components:
+        - type: "pricing_table"
+          structure:
+            - plan: "Basic"
+              price: "$9.99/mo"
+              features: ["Feature A", "Feature B"]
+            - plan: "Pro"
+              price: "$19.99/mo"
+              features: ["Feature A", "Feature B", "Feature C"]
+            - plan: "Enterprise"
+              price: "Contact Us"
+              features: ["Custom Solutions"]
+        - type: "comparison_chart"
+          display: "interactive"
+    faq:
+      url: "/platform/faq"
+      layout: "faq"
+      components:
+        - type: "question_list"
+          source: "faq_api"
+        - type: "search_bar"
+          placeholder: "Search FAQs..."
+        - type: "contact_support_link"
+          url: "/help/contact"
+  resources:
+    documentation:
+      url: "/resources/documentation"
+      layout: "doc"
+      components:
+        - type: "sidebar"
+          content: "Documentation index"
+        - type: "content_view"
+          source: "docs_api"
+        - type: "search_bar"
+          placeholder: "Search documentation..."
+    guides:
+      url: "/resources/guides"
+      layout: "doc"
+      components:
+        - type: "guide_list"
+          source: "guides_api"
+        - type: "filter_panel"
+          filters:
+            - "Topic"
+            - "Difficulty"
+        - type: "featured_guide"
+          display: "highlighted"
+    api_references:
+      url: "/resources/api-references"
+      layout: "doc"
+      components:
+        - type: "navigation_menu"
+          content: "API endpoints"
+        - type: "code_samples"
+          format: "collapsible"
+        - type: "version_selector"
+          options:
+            - "v1"
+            - "v2"
+    community:
+      url: "/resources/community"
+      layout: "community"
+      components:
+        - type: "forum_link"
+          url: "/forum"
+        - type: "events_list"
+          source: "events_api"
+        - type: "testimonial_carousel"
+          display: "rotating"
+  company:
+    about:
+      url: "/company/about"
+      layout: "company"
+      components:
+        - type: "mission_statement"
+          content: "Our mission and vision"
+        - type: "company_history"
+          display: "timeline"
+        - type: "team_profiles"
+          source: "team_api"
+    blog:
+      url: "/company/blog"
+      layout: "blog"
+      components:
+        - type: "post_list"
+          source: "blog_api"
+        - type: "category_filter"
+          options:
+            - "News"
+            - "Updates"
+            - "Insights"
+        - type: "search_bar"
+          placeholder: "Search blog posts..."
+    careers:
+      url: "/company/careers"
+      layout: "company"
+      components:
+        - type: "job_listings"
+          source: "careers_api"
+        - type: "application_form"
+          action: "submit_application"
+        - type: "benefits_overview"
+          content: "Company benefits details"
+    contact:
+      url: "/company/contact"
+      layout: "contact"
+      components:
+        - type: "contact_form"
+          action: "submit_contact"
+        - type: "interactive_map"
+          provider: "maplibre-gl-js"
+        - type: "social_links"
+          links:
+            - platform: "LinkedIn"
+              url: "https://linkedin.com/company/yourcompany"
+            - platform: "Twitter"
+              url: "https://twitter.com/yourcompany"
+  legal:
+    terms:
+      url: "/legal/terms"
+      layout: "legal"
+      components:
+        - type: "content_view"
+          content: "Terms and Conditions text"
+        - type: "acknowledgment_date"
+          input: "date_picker"
+    privacy:
+      url: "/legal/privacy"
+      layout: "legal"
+      components:
+        - type: "content_view"
+          content: "Privacy Policy text"
+        - type: "data_handling_summary"
+          content: "Summary of data practices"
+    cookies:
+      url: "/legal/cookies"
+      layout: "legal"
+      components:
+        - type: "content_view"
+          content: "Cookie policy details"
+        - type: "cookie_settings_link"
+          url: "/settings/cookies"
+    licenses:
+      url: "/legal/licenses"
+      layout: "legal"
+      components:
+        - type: "license_text"
+          content: "License agreements and version history"
+  premium:
+    url: "/premium"
+    layout: "premium"
+    components:
+      - type: "subscription_plans"
+        details:
+          - plan: "Basic"
+            price: "$9.99/mo"
+            features: ["Standard Support", "Basic Analytics"]
+          - plan: "Pro"
+            price: "$19.99/mo"
+            features: ["Priority Support", "Advanced Analytics", "Custom Integrations"]
+          - plan: "Enterprise"
+            price: "Contact Sales"
+            features: ["Dedicated Account Manager", "Custom Solutions"]
+      - type: "benefits_list"
+        content: "List of exclusive premium features"
+      - type: "upgrade_button"
+        action: "initiate_upgrade_process"
+      - type: "cancellation_flow"
+        steps:
+          - "Confirm cancellation"
+          - "Feedback collection"
+          - "Cancellation complete"
+  footer:
+    label: "$name © $year"
+    year_auto_update: true
+    links:
+      - label: "Home"
+        url: "/"
+      - label: "About"
+        url: "/company/about"
+      - label: "Blog"
+        url: "/company/blog"
+      - label: "Careers"
+        url: "/company/careers"
+      - label: "Terms"
+        url: "/legal/terms"
+      - label: "Privacy"
+        url: "/legal/privacy"
+    social_media:
+      - platform: "Facebook"
+        url: "https://facebook.com/"
+      - platform: "X-Twitter"
+        url: "https://x.com/"
+      - platform: "LinkedIn"
+        url: "https://linkedin.com/company/"
+      - platform: "Instagram"
+        url: "https://instagram.com/"
+
+pages:
+  sitemap:
+    pages_count: 10
+    structure:
+      - path: "/"
+      - path: "/articles"
+      - path: "/news"
+      - path: "/news/press"
+      - path: "/news/information"
+      - path: "/creators"
+      - path: "/works"
+      - path: "/products"
+      - path: "/contact"
+      - path: "/crm"
+      - path: "/crm/dashboard"
+      - path: "/crm/analysis"
+      - path: "/crm/campaigns"
+      - path: "/crm/ticket"
+      - path: "/crm/contact"
+      - path: "/event"
+      - path: "/event/ticket"
+      - path: "/articles/post"
+      - path: "/articles/draft"
+      - path: "/articles/comment/post"
+      - path: "/articles/comment/draft"
+      - path: "/auth"
+      - path: "/auth/signin"
+      - path: "/auth/signout"
+      - path: "/auth/reset-id"
+      - path: "/auth/reset-password"
+      - path: "/admin/cms"
+      - path: "/profile"
+      - path: "/premium"
+      - path: "/pricing"
+      - path: "/platform"
+      - path: "/redirect"
+      - path: "/resources"
+      - path: "/support"
+      - path: "/help"
+      - path: "/company/about"
+      - path: "/company/about/#philosophy"
+      - path: "/company/about/#mission"
+      - path: "/company/about/#vision"
+      - path: "/company/news/press"
+      - path: "/company/news/information"
+      - path: "/company/history"
+      - path: "/company/contact"
+      - path: "/company/faq"
+      - path: "/company/careers"
+      - path: "/company/staff"
+      - path: "/company/blog"
+      - path: "/company/finance"
+      - path: "/service/business"
+      - path: "/service/individual"
+      - path: "/service/consulting"
+      - path: "/service/csr"
+      - path: "/legal/privacy"
+      - path: "/legal/terms"
+      - path: "/legal/cookies"
+      - path: "/legal/terms"
+      - path: "/legal/gdpr"
+      - path: "/info/copyright"
+      - path: "/lounge/privacy"

@@ -1,0 +1,170 @@
+# API patterns, DB queries
+
+api:
+  typescript: true
+  structure:
+    server:
+      port: 3001
+
+services:
+  caching:
+    type: "cloudflare_kv"
+    version:
+    configuration:
+      namespace: "saas-11924-namespace"
+      region: "us-west-1"
+
+  storage:
+    primary:
+      type: "cloudflare_r2"
+      version: "1.0"
+      configuration:
+        bucket_name: "saas-11924-bucket"
+        region: "us-west-1"
+
+  relational_db:
+    type: "cloudflare_d1"
+    version: "1.0"
+    configuration:
+      database_name: "saas-11924-database"
+      region: "us-west-1"
+
+  backup:
+    type: "rclone"
+    version: "1.0"
+    configuration:
+      remote: "saas-11924-remote"
+      path: ".backups/"
+
+  search:
+    type: "meilisearch"
+    version: "1.0"
+    configuration:
+      host: "http://localhost:7700"
+      api_key: "${MEILISEARCH_API_KEY}"
+
+  notifications:
+    email:
+      provider: "resend"
+      configuration:
+        apiKey: "${RESEND_API_KEY}"
+
+
+deployment:
+  environment:
+    - name: "development"
+      url: "http://localhost:3001"
+    - name: "staging"
+      url: "https://staging.saas-11924.com"
+    - name: "production"
+      url: "https://saas-11924.com"
+
+  infrastructure:
+    provider: "cloudflare workers"
+    version: "1.0"
+    configuration:
+      framework: "vite"
+      buildCommand: "npm run build"
+      outputDirectory: "dist"
+
+
+  monitoring:
+    logging:
+      provider: "pino"
+      level: "info"
+
+
+security:
+  authentication:
+    type: "auth0"
+    version: "1.0"
+    configuration:
+      domain: "saas-11924.auth0.com"
+      clientId: "${AUTH0_CLIENT_ID}"
+      clientSecret: "${AUTH0_CLIENT_SECRET}"
+      audience: "https://api.saas-11924.com"
+
+  authorization:
+    type: "role_based"
+    version: "1.0"
+    configuration:
+      roles:
+        - name: "admin"
+          permissions: ["manage_users", "view_reports"]
+        - name: "user"
+          permissions: ["view_content"]
+
+
+integration:
+  apis:
+    - name: "geolocation"
+      provider: "maplibre-gl-js"
+      apiKey: "${MAPLIBRE_API_KEY}"
+      endpoints:
+        - path: "/geocoding/v5/{endpoint}"
+          cacheTTL: 86400  # 1 day
+
+  webhooks:
+    outgoing:
+      - name: "application-status-change"
+        url: "${WEBHOOK_URL}/application-status"
+        events:
+          - "application.submitted"
+          - "application.approved"
+          - "application.rejected"
+        signing:
+          algorithm: "SHA256"
+          secret: "${WEBHOOK_SIGNING_SECRET}"
+        retries:
+          max: 3
+          backoff: "exponential"
+
+    incoming:
+      - path: "/api/webhooks/payment-provider"
+        secret: "${PAYMENT_WEBHOOK_SECRET}"
+        allowedIPs:
+          - "192.168.0.1/32"
+          - "10.0.0.0/24"
+
+
+tests:
+  unit:
+    framework: "vitest"
+    coverage:
+      threshold: 80
+      reporters:
+        - "text"
+        - "json"
+
+  integration:
+    framework: "vitest"
+    environment:
+      supabase: "local"
+      redis: "local"
+
+  e2e:
+    framework: "playwright"
+    browsers:
+      - "chromium"
+      - "firefox"
+      - "webkit"
+    videos: true
+    screenshots: "only-on-failure"
+
+  performance:
+    tool: "k6"
+    thresholds:
+      http_req_duration:
+        p95: 500  # 95% of requests must complete within 500ms
+      http_req_failed:
+        rate: 0.01  # No more than 1% of requests should fail
+
+
+documentation:
+  api:
+    type: "openapi"
+    version: "3.0"
+    configuration:
+      outputFile: "docs/api.yaml"
+      servers:
+        - url: "https://api.saas-11924.com"
