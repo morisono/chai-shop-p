@@ -1,3 +1,116 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Premium Chai Shop Global Styles */
+:root {
+  --brand-primary: #8B4513;
+  --brand-secondary: #F5DEB3;
+  --brand-accent: #D2691E;
+  --brand-background: #FFF8DC;
+  --brand-text: #2F1B14;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--brand-background);
+  color: var(--brand-text);
+  line-height: 1.6;
+}
+
+/* Kinetic Typography Utilities */
+.kinetic-text {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.kinetic-text-animated {
+  animation: kineticFadeIn 0.8s ease-out;
+}
+
+/* Premium Button Styles */
+.btn-premium {
+  @apply px-8 py-4 bg-brand-primary text-white font-medium rounded-lg
+         transition-all duration-300 hover:bg-brand-accent hover:scale-105
+         active:scale-95 shadow-lg hover:shadow-xl;
+}
+
+.btn-secondary {
+  @apply px-8 py-4 border-2 border-brand-primary text-brand-primary font-medium
+         rounded-lg transition-all duration-300 hover:bg-brand-primary
+         hover:text-white hover:scale-105 active:scale-95;
+}
+
+/* Noble Container */
+.noble-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Premium Card Styles */
+.premium-card {
+  @apply bg-white rounded-2xl shadow-lg border border-chai-200
+         transition-all duration-300 hover:shadow-xl hover:scale-105;
+}
+
+/* Smooth Reveal Animation */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--brand-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-accent);
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+/* Premium gradient backgrounds */
+.gradient-warm {
+  background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 100%);
+}
+
+.gradient-chai {
+  background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+}
