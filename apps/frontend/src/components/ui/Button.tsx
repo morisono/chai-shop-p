@@ -18,7 +18,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses = `
-    inline-flex items-center justify-center font-medium rounded-lg
+    bg-brand-primary inline-flex items-center justify-center font-medium rounded-lg
     transition-all duration-300 focus:outline-none focus:ring-2
     focus:ring-brand-accent focus:ring-offset-2 disabled:opacity-50
     disabled:cursor-not-allowed

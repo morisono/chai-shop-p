@@ -99,11 +99,11 @@ export const BrandStory: React.FC = () => {
             Our Heritage
           </motion.p>
 
-          <KineticText variant="lg" className="text-brand-text mb-6">
+          <KineticText variant="lg" className="text-brand-text mb-4">
             A Legacy of Tradition
           </KineticText>
 
-          <p className="text-lg text-brand-text/80 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-md text-brand-text/80 max-w-3xl mx-auto leading-relaxed">
             From a small tea stall in Mumbai to a global brand, our journey has been
             guided by one unwavering principle: honoring the sacred tradition of chai
             while embracing the future with sustainability and innovation.
@@ -111,7 +111,7 @@ export const BrandStory: React.FC = () => {
         </motion.div>
 
         {/* Main Story Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-16">
           {/* Story Text */}
           <motion.div
             variants={containerVariants}
@@ -121,10 +121,10 @@ export const BrandStory: React.FC = () => {
             className="space-y-6"
           >
             <motion.div variants={itemVariants}>
-              <h3 className="font-display font-bold text-2xl text-brand-text mb-4">
+              <h3 className="font-display font-bold text-2xl text-brand-text mb-3">
                 The Paramparā Promise
               </h3>
-              <p className="text-brand-text/80 leading-relaxed mb-4">
+              <p className="text-brand-text/80 leading-relaxed mb-3">
                 Paramparā (परम्परा) means "tradition" in Sanskrit—a word that embodies
                 our commitment to preserving the authentic art of chai making while
                 ensuring every cup tells the story of our heritage.
@@ -154,7 +154,7 @@ export const BrandStory: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1624186670515-82047cefd635?w=600&h=400&fit=crop&crop=center"
                 alt="Chai preparation process"
-                className="w-full h-96 object-cover"
+                className="w-full h-[24rem] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/20 to-transparent" />
 
@@ -164,7 +164,7 @@ export const BrandStory: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute bottom-6 left-6 right-6"
+                className="absolute bottom-4 left-4 right-4"
               >
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
                   <p className="text-brand-text font-semibold text-lg">

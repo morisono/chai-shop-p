@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             {navigationItems.map((item) => (
               <motion.a
                 key={item.name}
@@ -145,7 +145,7 @@ export const Header: React.FC = () => {
               animate="open"
               exit="closed"
               variants={menuVariants}
-              className="md:hidden absolute top-full left-0 right-0 bg-brand-background border-t border-chai-200 shadow-lg"
+              className="md:hidden absolute top-full left-0 right-0 bg-brand-background shadow-lg"
             >
               <div className="px-4 py-6 space-y-4">
                 {navigationItems.map((item, i) => (
@@ -160,7 +160,7 @@ export const Header: React.FC = () => {
                     {item.name}
                   </motion.a>
                 ))}
-                <div className="pt-4 border-t border-chai-200 flex items-center justify-between">
+                <div className="pt-4 flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <button className="p-2 text-brand-text">
                       <User className="w-5 h-5" />
