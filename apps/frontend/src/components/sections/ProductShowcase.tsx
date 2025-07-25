@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Star, Heart, ShoppingCart } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { KineticText } from '../ui/KineticText'
+import { useCart } from '../../contexts'
 
 interface Product {
   id: string
@@ -57,6 +58,18 @@ const featuredProducts: Product[] = [
 const ProductCard: React.FC<{ product: Product; index: number }> = ({ product, index }) => {
   const [isHovered, setIsHovered] = React.useState(false)
   const [isFavorited, setIsFavorited] = React.useState(false)
+  const { addItem, openCart } = useCart()
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      description: product.description,
+    })
+    openCart()
+  }
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -190,6 +203,7 @@ const ProductCard: React.FC<{ product: Product; index: number }> = ({ product, i
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleAddToCart}
             className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-accent transition-colors"
           >
             <ShoppingCart className="w-4 h-4" />

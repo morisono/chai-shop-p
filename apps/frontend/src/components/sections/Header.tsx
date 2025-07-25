@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ShoppingBag, User } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
 import { Button } from '../ui/Button'
+import { CartIcon } from '../cart'
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -49,7 +50,7 @@ export const Header: React.FC = () => {
       scale: 1,
       transition: {
         duration: 0.3,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: 'easeOut' as const,
       },
     },
   }
@@ -114,16 +115,7 @@ export const Header: React.FC = () => {
             >
               <User className="w-5 h-5" />
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 text-brand-text hover:text-brand-primary transition-colors relative"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-accent text-white text-xs rounded-full flex items-center justify-center">
-                2
-              </span>
-            </motion.button>
+            <CartIcon />
             <Button size="sm">Order Now</Button>
           </div>
 
@@ -165,12 +157,7 @@ export const Header: React.FC = () => {
                     <button className="p-2 text-brand-text">
                       <User className="w-5 h-5" />
                     </button>
-                    <button className="p-2 text-brand-text relative">
-                      <ShoppingBag className="w-5 h-5" />
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-accent text-white text-xs rounded-full flex items-center justify-center">
-                        2
-                      </span>
-                    </button>
+                    <CartIcon />
                   </div>
                   <Button size="sm">Order Now</Button>
                 </div>

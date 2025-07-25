@@ -4,25 +4,22 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  root: '.', // Explicitly set root to current directory (apps/frontend)
-  publicDir: 'public',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(process.cwd(), './src'),
-    },
-  },
-  css: {
-    postcss: './postcss.config.js',
-  },
-  server: {
-    port: 3000,
-    fs: {
-      // Allow serving files from parent directories for monorepo support
-      allow: ['..', '../..', '.'],
-    },
   },
 })
