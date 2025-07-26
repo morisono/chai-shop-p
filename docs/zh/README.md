@@ -30,7 +30,7 @@ MoleQ 是一个基于 Vite 和 React 构建的现代化、生产就绪的 SaaS �
 ## 主要特性
 
 - **现代技术栈** - Vite、React、TypeScript、TailwindCSS
-- **身份验证** - Auth0、通行密钥、WebAuthn 支持
+- **身份验证** - Better Auth、通行密钥、WebAuthn 支持
 - **支付集成** - 带订阅管理的 Stripe SDK
 - **数据库** - 使用 Drizzle ORM 的 SQLite
 - **部署就绪** - Cloudflare Workers、Pages、D1、KV
@@ -251,7 +251,7 @@ pnpm deploy
 - [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
 - [Radix UI](https://radix-ui.com/) - 可访问的组件原语
 - [Stripe](https://stripe.com/) - 支付处理
-- [Auth0](https://auth0.com/) - 身份验证平台
+- [Better Auth](https://better-auth.com/) - 身份验证平台
 - [OpenAI](https://openai.com/) - AI 集成
 
 ---

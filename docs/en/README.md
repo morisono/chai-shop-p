@@ -30,7 +30,7 @@ Designed for flexibility, it empowers users to build freely without constraints.
 ## Key Features
 
 - **Modern Tech Stack** - Vite, React, TypeScript, TailwindCSS
-- **Authentication** - Auth0, Passkeys, WebAuthn support
+- **Authentication** - Better Auth, Passkeys, WebAuthn support
 - **Payment Integration** - Stripe SDK with subscription management
 - **Database** - SQLite with Drizzle ORM
 - **Deployment Ready** - Cloudflare Workers, Pages, D1, KV
@@ -236,7 +236,7 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Radix UI](https://radix-ui.com/) - Accessible component primitives
 - [Stripe](https://stripe.com/) - Payment processing
-- [Auth0](https://auth0.com/) - Authentication platform
+- [Better Auth](https://better-auth.com/) - Authentication platform
 - [OpenAI](https://openai.com/) - AI integration
 
 ---

@@ -30,7 +30,7 @@ MoleQはViteとReactで構築された、モダンでプロダクション対応
 ## 主な機能
 
 - **モダンな技術スタック** - Vite、React、TypeScript、TailwindCSS
-- **認証** - Auth0、パスキー、WebAuthnサポート
+- **認証** - Better Auth、パスキー、WebAuthnサポート
 - **決済統合** - サブスクリプション管理機能付きStripe SDK
 - **データベース** - Drizzle ORMを使用したSQLite
 - **デプロイメント対応** - Cloudflare Workers、Pages、D1、KV
@@ -251,7 +251,7 @@ pnpm deploy
 - [Tailwind CSS](https://tailwindcss.com/) - ユーティリティファーストCSSフレームワーク
 - [Radix UI](https://radix-ui.com/) - アクセシブルなコンポーネントプリミティブ
 - [Stripe](https://stripe.com/) - 決済処理
-- [Auth0](https://auth0.com/) - 認証プラットフォーム
+- [Better Auth](https://better-auth.com/) - 認証プラットフォーム
 - [OpenAI](https://openai.com/) - AI統合
 
 ---
