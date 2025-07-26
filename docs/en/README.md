@@ -41,7 +41,7 @@ Designed for flexibility, it empowers users to build freely without constraints.
 - **UI Components** - Radix UI, Framer Motion animations
 
 
-You can check full tech stack: [from here](.idea/tech_stack.yaml)
+You can check full tech stack: [from here](.github/prompts/essential/tech_stack.yaml)
 
 ## Installation
 
@@ -220,7 +220,7 @@ For more details, see our [Git Flow Rules](.github/instructions/git-flow-rules.i
 - Update documentation as needed
 - Follow conventional commit messages
 
-For more details, see our [Project Rules](.idea/project_rules.yaml).
+For more details, see our [Project Rules](.github/prompts/essential/project_rules.yaml).
 
 </details>
 

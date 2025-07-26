@@ -41,7 +41,7 @@ MoleQ 是一个基于 Vite 和 React 构建的现代化、生产就绪的 SaaS �
 - **UI 组件** - Radix UI、Framer Motion 动画
 
 
-您可以查看完整的技术栈：[从这里](.idea/tech_stack.yaml)
+您可以查看完整的技术栈：[从这里](.github/prompts/essential/tech_stack.yaml)
 
 ## 安装
 
@@ -235,7 +235,7 @@ pnpm deploy
 - 根据需要更新文档
 - 遵循约定式提交消息
 
-更多详情，请参阅我们的 [Project Rules](.idea/project_rules.yaml)。
+更多详情，请参阅我们的 [Project Rules](.github/prompts/essential/project_rules.yaml)。
 
 </details>
 

@@ -41,7 +41,7 @@ MoleQはViteとReactで構築された、モダンでプロダクション対応
 - **UIコンポーネント** - Radix UI、Framer Motionアニメーション
 
 
-完全な技術スタックを確認できます：[こちらから](.idea/tech_stack.yaml)
+完全な技術スタックを確認できます：[こちらから](.github/prompts/essential/tech_stack.yaml)
 
 ## インストール
 
@@ -235,7 +235,7 @@ pnpm deploy
 - 必要に応じてドキュメントを更新
 - 従来のコミットメッセージに従う
 
-詳細については、[Project Rules](.idea/project_rules.yaml)をご覧ください。
+詳細については、[Project Rules](.github/prompts/essential/project_rules.yaml)をご覧ください。
 
 </details>
 

@@ -1,7 +1,7 @@
 # File Relocation Log
 
 ## Summary
-Successfully reorganized the project structure according to the specification in `.idea/project_structure.yaml`. All files have been moved to their designated locations and path references have been updated.
+Successfully reorganized the project structure according to the specification in `.github/prompts/essential/project_structure.yaml`. All files have been moved to their designated locations and path references have been updated.
 
 ## Files Moved
 
