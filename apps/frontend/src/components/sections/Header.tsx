@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ShoppingBag, User } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
 import { Button } from '../ui/Button'
+import { CartIcon } from '../cart'
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -49,7 +50,7 @@ export const Header: React.FC = () => {
       scale: 1,
       transition: {
         duration: 0.3,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: 'easeOut' as const,
       },
     },
   }
@@ -92,7 +93,7 @@ export const Header: React.FC = () => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             {navigationItems.map((item) => (
               <motion.a
                 key={item.name}
@@ -114,16 +115,7 @@ export const Header: React.FC = () => {
             >
               <User className="w-5 h-5" />
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 text-brand-text hover:text-brand-primary transition-colors relative"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-accent text-white text-xs rounded-full flex items-center justify-center">
-                2
-              </span>
-            </motion.button>
+            <CartIcon />
             <Button size="sm">Order Now</Button>
           </div>
 
@@ -145,7 +137,7 @@ export const Header: React.FC = () => {
               animate="open"
               exit="closed"
               variants={menuVariants}
-              className="md:hidden absolute top-full left-0 right-0 bg-brand-background border-t border-chai-200 shadow-lg"
+              className="md:hidden absolute top-full left-0 right-0 bg-brand-background shadow-lg"
             >
               <div className="px-4 py-6 space-y-4">
                 {navigationItems.map((item, i) => (
@@ -160,17 +152,12 @@ export const Header: React.FC = () => {
                     {item.name}
                   </motion.a>
                 ))}
-                <div className="pt-4 border-t border-chai-200 flex items-center justify-between">
+                <div className="pt-4 flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <button className="p-2 text-brand-text">
                       <User className="w-5 h-5" />
                     </button>
-                    <button className="p-2 text-brand-text relative">
-                      <ShoppingBag className="w-5 h-5" />
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-accent text-white text-xs rounded-full flex items-center justify-center">
-                        2
-                      </span>
-                    </button>
+                    <CartIcon />
                   </div>
                   <Button size="sm">Order Now</Button>
                 </div>

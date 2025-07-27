@@ -83,7 +83,7 @@ export const Footer: React.FC = () => {
               />
               <Button
                 type="submit"
-                className="bg-white text-brand-primary hover:bg-white/90 min-w-[120px]"
+                className="text-brand-primary hover:bg-white/30 min-w-[120px]"
               >
                 {isSubscribed ? '✓ Subscribed!' : 'Subscribe'}
               </Button>
@@ -99,7 +99,8 @@ export const Footer: React.FC = () => {
 
       {/* Main Footer Content */}
       <div className="noble-container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+        <div className="grid sm:grid-cols-2
+        md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <motion.div
@@ -258,10 +259,10 @@ export const Footer: React.FC = () => {
 
             <div className="text-center md:text-right">
               <p className="text-white/60 text-sm">
-                © 2024 Paramparā Chai Company. All rights reserved.
+                Paramparā © {new Date().getFullYear()}
               </p>
               <p className="text-white/40 text-xs mt-1">
-                Made with ❤️ for chai lovers worldwide
+                Made with ❤️ for chai lovers
               </p>
             </div>
           </motion.div>
