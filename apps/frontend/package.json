@@ -33,6 +33,7 @@
     "@vitest/eslint-plugin": "^1.3.4",
     "autoprefixer": "^10.4.21",
     "bcrypt": "^5.1.1",
+    "better-auth": "^1.3.4",
     "checkly": "^6.0.1",
     "clsx": "^2.1.1",
     "date-fns": "4.1.0",
