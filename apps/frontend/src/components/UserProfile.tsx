@@ -1,10 +1,26 @@
-import React from 'react';
-import { useSession } from 'better-auth/react';
+import React, { useState, useEffect } from 'react';
+import { authClient } from '../../lib/auth-client';
 import { useAuth } from '../../lib/auth';
 
 export const UserProfile: React.FC = () => {
-  const { data: session, isLoading } = useSession();
+  const [session, setSession] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { signOut, addPasskey, enableTwoFactor } = useAuth();
+
+  useEffect(() => {
+    const getSession = async () => {
+      try {
+        const sessionData = await authClient.getSession();
+        setSession(sessionData.data);
+      } catch (error) {
+        console.error('Failed to get session:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getSession();
+  }, []);
 
   if (isLoading) {
     return (
