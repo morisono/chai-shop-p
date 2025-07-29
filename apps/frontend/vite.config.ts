@@ -11,6 +11,11 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    fs: {
+      // Allow serving files from anywhere under the workspace
+      allow: ['../../../'],
+      strict: false,
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
