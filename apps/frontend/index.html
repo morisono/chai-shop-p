@@ -22,9 +22,25 @@
     <meta property="twitter:description" content="Experience the noble tradition of authentic Indian chai, crafted with ancient wisdom and the finest spices." />
     <meta property="twitter:image" content="https://parampara-chai.com/og-image.jpg" />
 
+    <!-- Content Security Policy for Stripe -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://m.stripe.network https://q.stripe.com;
+      frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://m.stripe.network;
+      connect-src 'self' https://api.stripe.com https://m.stripe.network https://q.stripe.com http://localhost:3001;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https: http:;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self' https://checkout.stripe.com;
+    ">
+
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://js.stripe.com" />
+    <link rel="preconnect" href="https://m.stripe.network" />
 
     <title>Paramparā - Premium Authentic Indian Chai | Artisanal Tea Heritage Since 1998</title>
   </head>
