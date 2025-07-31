@@ -1,23 +1,390 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
-import Stripe from 'stripe'
-import dotenv from 'dotenv'
-// import { StripeWebhookService } from './webhooks/webhook-service'
-
-// Load environment variables
-dotenv.config()
+import { auth } from './lib/auth'
+import { auditLogger, createAuditMiddleware } from './lib/auditLogger'
+import { rateLimiter } from './lib/rateLimiter'
+import { securityMiddleware } from './lib/securityMiddleware'
 
 const fastify = Fastify({
-  logger: true,
-  // Enable raw body parsing for webhooks
-  disableRequestLogging: false,
-  bodyLimit: 1048576, // 1MB
+  logger: {
+    level: process.env.LOG_LEVEL || 'info',
+    serializers: {
+      req: (request) => ({
+        method: request.method,
+        url: request.url,
+        headers: process.env.ENVIRONMENT === 'development' ? request.headers : {
+          'user-agent': request.headers['user-agent'],
+          'content-type': request.headers['content-type']
+        },
+        remoteAddress: request.ip
+      }),
+      res: (reply) => ({
+        statusCode: reply.statusCode,
+        headers: process.env.ENVIRONMENT === 'development' ? reply.getHeaders() : {}
+      })
+    }
+  }
 })
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+// Environment configuration
+const isProduction = process.env.ENVIRONMENT === 'production'
+const isStaging = process.env.ENVIRONMENT === 'staging'
+const isDevelopment = process.env.ENVIRONMENT === 'development'
+
+async function startServer() {
+  try {
+    // CORS configuration
+    await fastify.register(cors, {
+      origin: isDevelopment
+        ? ['http://localhost:5173', 'http://localhost:3000']
+        : isStaging
+        ? ['https://staging.app.domain.com']
+        : ['https://app.domain.com'],
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Env-Override']
+    })
+
+    // Security middleware
+    const securityHandler = await securityMiddleware.createSecurityMiddleware()
+    fastify.addHook('preHandler', securityHandler)
+
+    // Mock auth middleware for development
+    if (isDevelopment) {
+      const mockAuthHandler = await securityMiddleware.createMockAuthMiddleware()
+      fastify.addHook('preHandler', mockAuthHandler)
+    }
+
+    // Audit middleware
+    fastify.addHook('preHandler', createAuditMiddleware())
+
+    // Rate limiting middleware for auth endpoints
+    const authRateLimiter = rateLimiter.createMiddleware('login')
+    const apiRateLimiter = rateLimiter.createMiddleware('api')
+
+    // Health check endpoint
+    fastify.get('/health', async (request, reply) => {
+      const healthStatus = {
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        environment: process.env.ENVIRONMENT,
+        version: process.env.APP_VERSION || '1.0.0',
+        services: {
+          database: 'connected', // TODO: Add actual database health check
+          auth: auth ? 'initialized' : 'not_initialized',
+          rateLimit: 'active',
+          audit: 'active'
+        }
+      }
+
+      // Only include detailed info in development
+      if (isDevelopment) {
+        healthStatus.services = {
+          ...healthStatus.services,
+          mockAuth: 'enabled',
+          debugMode: 'active'
+        }
+      }
+
+      return healthStatus
+    })
+
+    // Better Auth routes
+    fastify.all('/api/auth/*', {
+      preHandler: [authRateLimiter]
+    }, async (request, reply) => {
+      const authRequest = new Request(request.url, {
+        method: request.method,
+        headers: request.headers as any,
+        body: request.method !== 'GET' && request.method !== 'HEAD'
+          ? JSON.stringify(request.body)
+          : undefined
+      })
+
+      try {
+        const authResponse = await auth.handler(authRequest)
+
+        // Set response headers
+        authResponse.headers.forEach((value, key) => {
+          reply.header(key, value)
+        })
+
+        // Log auth events
+        const url = new URL(request.url)
+        const endpoint = url.pathname.split('/').pop()
+
+        await auditLogger.logAuthEvent(
+          endpoint as any || 'unknown',
+          authResponse.ok ? 'success' : 'failure',
+          {
+            userId: (request as any).user?.id,
+            sessionId: (request as any).securityContext?.requestId,
+            ipAddress: (request as any).securityContext?.ipAddress,
+            userAgent: (request as any).securityContext?.userAgent,
+            metadata: {
+              endpoint,
+              statusCode: authResponse.status,
+              method: request.method
+            }
+          }
+        )
+
+        return reply
+          .status(authResponse.status)
+          .send(await authResponse.text())
+      } catch (error) {
+        fastify.log.error('Auth handler error:', error)
+
+        await auditLogger.logAuthEvent('auth_error', 'error', {
+          userId: (request as any).user?.id,
+          sessionId: (request as any).securityContext?.requestId,
+          ipAddress: (request as any).securityContext?.ipAddress,
+          userAgent: (request as any).securityContext?.userAgent,
+          metadata: {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            endpoint: new URL(request.url).pathname
+          }
+        })
+
+        return reply.status(500).send({ error: 'Authentication service error' })
+      }
+    })
+
+    // WebAuthn/Passkey endpoints
+    fastify.post('/api/webauthn/register/begin', {
+      preHandler: [authRateLimiter]
+    }, async (request, reply) => {
+      // This would integrate with @simplewebauthn/server
+      // For now, return a basic response
+      return {
+        challenge: 'webauthn-challenge',
+        rpId: process.env.BETTER_AUTH_DOMAIN || 'localhost',
+        timeout: 60000
+      }
+    })
+
+    fastify.post('/api/webauthn/register/complete', {
+      preHandler: [authRateLimiter]
+    }, async (request, reply) => {
+      // Complete WebAuthn registration
+      return { success: true }
+    })
+
+    fastify.post('/api/webauthn/authenticate/begin', {
+      preHandler: [authRateLimiter]
+    }, async (request, reply) => {
+      // Begin WebAuthn authentication
+      return {
+        challenge: 'webauthn-auth-challenge',
+        timeout: 60000
+      }
+    })
+
+    fastify.post('/api/webauthn/authenticate/complete', {
+      preHandler: [authRateLimiter]
+    }, async (request, reply) => {
+      // Complete WebAuthn authentication
+      return { success: true }
+    })
+
+    // API endpoints with rate limiting
+    fastify.register(async function(fastify) {
+      fastify.addHook('preHandler', apiRateLimiter)
+
+      // User profile endpoint
+      fastify.get('/api/user/profile', async (request, reply) => {
+        const user = (request as any).user
+        if (!user) {
+          return reply.status(401).send({ error: 'Unauthorized' })
+        }
+
+        await auditLogger.logAccessEvent(
+          'user_profile',
+          'read',
+          'success',
+          {
+            userId: user.id,
+            sessionId: (request as any).securityContext?.requestId,
+            ipAddress: (request as any).securityContext?.ipAddress,
+            userAgent: (request as any).securityContext?.userAgent
+          }
+        )
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          mfaEnabled: user.mfaEnabled || false
+        }
+      })
+
+      // Security settings endpoint
+      fastify.get('/api/user/security', async (request, reply) => {
+        const user = (request as any).user
+        if (!user) {
+          return reply.status(401).send({ error: 'Unauthorized' })
+        }
+
+        return {
+          mfaEnabled: user.mfaEnabled || false,
+          passkeyEnabled: false, // TODO: Check user's passkeys
+          lastPasswordChange: user.passwordChangedAt,
+          activeSessions: 1, // TODO: Get actual session count
+          securityLevel: process.env.SECURITY_LEVEL || 'medium'
+        }
+      })
+
+      // Audit log endpoint (admin only)
+      fastify.get('/api/admin/audit-logs', async (request, reply) => {
+        const user = (request as any).user
+        if (!user || user.role !== 'admin') {
+          return reply.status(403).send({ error: 'Forbidden' })
+        }
+
+        // TODO: Implement actual audit log retrieval
+        return {
+          logs: [],
+          total: 0,
+          page: 1
+        }
+      })
+    })
+
+    // Development-only endpoints
+    if (isDevelopment) {
+      fastify.get('/api/dev/mock-login', async (request, reply) => {
+        const { role } = request.query as { role?: string }
+
+        const mockUsers = {
+          admin: { id: 'dev_admin', email: 'admin@dev', name: 'Dev Admin', role: 'admin' },
+          user: { id: 'dev_user', email: 'user@dev', name: 'Dev User', role: 'user' },
+          manager: { id: 'dev_manager', email: 'manager@dev', name: 'Dev Manager', role: 'manager' }
+        }
+
+        const user = mockUsers[role as keyof typeof mockUsers] || mockUsers.user
+
+        await auditLogger.logAuthEvent('login', 'success', {
+          userId: user.id,
+          metadata: { mockAuth: true, role }
+        })
+
+        return {
+          user,
+          token: `DEBUG_TOKEN_${role?.toUpperCase() || 'USER'}`,
+          message: 'Mock authentication successful (development only)'
+        }
+      })
+
+      fastify.get('/api/dev/security-context', async (request, reply) => {
+        return (request as any).securityContext || {}
+      })
+    }
+
+    // Error handler
+    fastify.setErrorHandler(async (error, request, reply) => {
+      fastify.log.error(error)
+
+      await auditLogger.log({
+        eventType: 'server_error',
+        eventCategory: 'system',
+        severity: 'high',
+        outcome: 'error',
+        resource: request.url,
+        action: request.method,
+        metadata: {
+          errorMessage: error.message,
+          stack: isDevelopment ? error.stack : undefined
+        },
+        ipAddress: (request as any).securityContext?.ipAddress,
+        userAgent: (request as any).securityContext?.userAgent
+      })
+
+      const errorResponse = {
+        error: 'Internal Server Error',
+        requestId: (request as any).securityContext?.requestId
+      }
+
+      if (isDevelopment) {
+        errorResponse['details'] = error.message
+        errorResponse['stack'] = error.stack
+      }
+
+      reply.status(500).send(errorResponse)
+    })
+
+    // Graceful shutdown
+    process.on('SIGTERM', async () => {
+      fastify.log.info('SIGTERM received, shutting down gracefully')
+      await auditLogger.shutdown()
+      rateLimiter.shutdown()
+      await fastify.close()
+      process.exit(0)
+    })
+
+    process.on('SIGINT', async () => {
+      fastify.log.info('SIGINT received, shutting down gracefully')
+      await auditLogger.shutdown()
+      rateLimiter.shutdown()
+      await fastify.close()
+      process.exit(0)
+    })
+
+    // Start server
+    const port = parseInt(process.env.PORT || '3001')
+    const host = process.env.HOST || '0.0.0.0'
+
+    await fastify.listen({ port, host })
+
+    fastify.log.info(`🚀 Authentication server started`)
+    fastify.log.info(`📍 Environment: ${process.env.ENVIRONMENT || 'development'}`)
+    fastify.log.info(`🌐 Server running on http://${host}:${port}`)
+    fastify.log.info(`🔐 Auth endpoints: http://${host}:${port}/api/auth/`)
+    fastify.log.info(`🛡️  Security level: ${process.env.SECURITY_LEVEL || 'medium'}`)
+
+    if (isDevelopment) {
+      fastify.log.info(`🧪 Mock auth: http://${host}:${port}/api/dev/mock-login`)
+      fastify.log.info(`📊 Health check: http://${host}:${port}/health`)
+    }
+
+  } catch (error) {
+    fastify.log.error('Failed to start server:', error)
+    process.exit(1)
+  }
+}
+
+// Handle uncaught exceptions
+process.on('uncaughtException', async (error) => {
+  console.error('Uncaught Exception:', error)
+  await auditLogger.log({
+    eventType: 'uncaught_exception',
+    eventCategory: 'system',
+    severity: 'critical',
+    outcome: 'error',
+    metadata: {
+      errorMessage: error.message,
+      stack: error.stack
+    }
+  })
+  process.exit(1)
 })
+
+process.on('unhandledRejection', async (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+  await auditLogger.log({
+    eventType: 'unhandled_rejection',
+    eventCategory: 'system',
+    severity: 'critical',
+    outcome: 'error',
+    metadata: {
+      reason: reason instanceof Error ? reason.message : String(reason)
+    }
+  })
+  process.exit(1)
+})
+
+// Start the server
+startServer()
 
 // Initialize Webhook Service (temporarily disabled)
 // const webhookService = new StripeWebhookService(stripe, fastify.log)
