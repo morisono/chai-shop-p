@@ -1,13 +1,17 @@
 {
   "scripts": {
-    "generate": "drizzle-kit generate",
+    "build": "tsc",
+    "generate": "npx drizzle-kit generate",
+    "push": "npx drizzle-kit push",
+    "seed": "npx tsx src/seed/seed.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "dotenv -c production -- drizzle-kit migrate",
     "studio": "dotenv -c production -- drizzle-kit studio"
   },
   "main": "dist/index.js",
   "description": "",
   "dependencies": {
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.1",
     "drizzle-orm": "^0.44.2",
     "pg": "^8.16.2"
   },
