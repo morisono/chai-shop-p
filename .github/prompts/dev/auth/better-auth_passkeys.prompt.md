@@ -57,8 +57,8 @@ authentication:
         - "company.com"
     twitter:
       enabled: true
-      client_id: "${TWITTER_CLIENT_ID}"
-      client_secret: "${TWITTER_CLIENT_SECRET}"
+      client_id: "${X_TWITTER_CLIENT_ID}"
+      client_secret: "${X_TWITTER_CLIENT_SECRET}"
       scope:
         - "tweet.read"
         - "users.read"
