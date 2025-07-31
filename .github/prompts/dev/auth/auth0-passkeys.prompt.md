@@ -1,10 +1,10 @@
 ---
 mode: 'agent'
 tools: ['githubRepo', 'codebase']
-description: 'Refactor authentication to use Auth0.js, SimpleWebAuthn, Drizzle ORM, Vite.js, and deploy on Cloudflare Workers/Pages'
+description: 'Design authentication to use Auth0.js, SimpleWebAuthn, Drizzle ORM, Vite.js, and deploy on Cloudflare Workers/Pages'
 ---
 
-Refactor the existing authentication to use Auth0.js (OAuth), SimpleWebAuthn (Passkeys), Drizzle ORM, Vite.js and deploy on Cloudflare Workers/Pages, ensuring compatibility with your current User model and database schema.
+Design the existing authentication to use Auth0.js (OAuth), SimpleWebAuthn (Passkeys), Drizzle ORM, Vite.js and deploy on Cloudflare Workers/Pages, ensuring compatibility with your current User model and database schema.
 
 Implement environment-specific security posture and automated compliance for auth flows.
 - Dev: mock auth accepting (e.g. “admin@dev:temp123”, `DEBUG_TOKEN_*`, `SESSION_DEV_*`), simulating RBAC roles & expiry. Redact secrets in logs.
