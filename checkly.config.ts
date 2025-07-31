@@ -8,7 +8,7 @@ const sendDefaults = {
 };
 
 // FIXME: Add your production URL
-const productionURL = 'https://vite-saas-boilerplate.com';
+const productionURL = 'https://parampora-chai.com';
 
 const emailChannel = new EmailAlertChannel('email-channel-1', {
   // FIXME: add your own email address, Checkly will send you an email notification if a check fails
@@ -20,7 +20,7 @@ export const config = defineConfig({
   // FIXME: Add your own project name, logical ID, and repository URL
   projectName: 'SaaS Boilerplate',
   logicalId: 'saas-boilerplate',
-  repoUrl: 'https://github.com/owner/vite-saas-boilerplate',
+  repoUrl: 'https://github.com/owner/parampora-chai',
   checks: {
     locations: ['us-east-1', 'eu-west-1'],
     tags: ['website'],
@@ -33,9 +33,9 @@ export const config = defineConfig({
     playwrightConfig: {
       use: {
         baseURL: process.env.ENVIRONMENT_URL || productionURL,
-        extraHTTPHeaders: {
-          'x-vercel-protection-bypass': process.env.VERCEL_BYPASS_TOKEN,
-        },
+        // extraHTTPHeaders: {
+          // 'x-protection-bypass': process.env.BYPASS_TOKEN,
+        // },
       },
     },
   },
