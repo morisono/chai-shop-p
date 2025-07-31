@@ -4,7 +4,7 @@ tools: ['githubRepo', 'codebase']
 description: 'Design authentication to use Better Auth, SimpleWebAuthn, Drizzle ORM, Vite.js, and deploy on Cloudflare Workers/Pages'
 ---
 
-Design the existing authentication to use Better Auth (OAuth), SimpleWebAuthn (Passkeys), Drizzle ORM, Vite.js and deploy on Cloudflare Workers/Pages, ensuring compatibility with your current User model and database schema.
+Design a authentication workflow seamlessly integrated with the existing UI to use Better Auth (OAuth), SimpleWebAuthn (Passkeys), Drizzle ORM, Vite.js and deploy on Cloudflare Workers/Pages, ensuring compatibility with your current User model and database schema.
 
 Implement environment-specific security posture and automated compliance for auth flows.
 - Dev: mock auth accepting (e.g. “admin@dev:temp123”, `DEBUG_TOKEN_*`, `SESSION_DEV_*`), simulating RBAC roles & expiry. Redact secrets in logs.
