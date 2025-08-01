@@ -68,39 +68,58 @@ You can check the full tech stack: [from here](../../.idea/tech_stack.yaml)
 
 3. **Set up environment variables**
 
-   **Root Level Configuration:**
+   **Application Level Configuration:**
    ```bash
-   cp .env.example .env.local
+   pushd apps/frontend/
+   cp .env.example .env
+   popd
+
+   pushd apps/backend/
+   cp .env.example .env
+   popd
    ```
 
    **Database Configuration:**
    ```bash
-   cp db/.env.example db/.env.local
+   cp db/.env.example db/.env
    ```
 
    **Infrastructure Configuration:**
    ```bash
-   cp infra/.env.example infra/.env.local
+   cp infra/.env.example infra/.env
    ```
 
-   Edit each `.env.local` file with your specific configuration.
+   Edit each `.env` file with your specific configuration.
 
 4. **Configure Database Environment**
 
-   In `db/.env.local`, set:
-   ```bash
-   # Database Configuration
-   DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
 
-   # Audit Configuration
-   AUDIT_BATCH_SIZE=100
-   AUDIT_FLUSH_INTERVAL=5000
-   AUDIT_RETENTION_DAYS=2555
-   ```
+   1. In `db/.env`, set:
+      ```bash
+      # Database Configuration
+      DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+
+      # Audit Configuration
+      AUDIT_BATCH_SIZE=100
+      AUDIT_FLUSH_INTERVAL=5000
+      AUDIT_RETENTION_DAYS=2555
+      ```
+
+   1. Configure `wrangler.jsonc`
+
+   1. Create a Hyperdrive
+
+      ```bash
+      DATABASE_URL=postgresql://user:password@localhost:5432/auth_db # Your Database URL
+      npx wrangler hyperdrive create my-first-hyperdrive --connection-string=$DATABASE_URL
+      ```
+
+      For more information, see [Hyperdrive documentation](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/).
+
 
 5. **Configure Infrastructure Environment**
 
-   In `infra/.env.local`, set:
+   In `infra/.env`, set:
    ```bash
    # Environment Configuration
    ENVIRONMENT=development
@@ -123,10 +142,42 @@ You can check the full tech stack: [from here](../../.idea/tech_stack.yaml)
    ```bash
    pnpm db:generate
    pnpm db:migrate
-   pnpm db:seed
+   pnpm db:push # Push the database schema
+   pnpm db:seed # Seed the database with initial data
    ```
 
 7. **Start development server**
+   ```bash
+   pnpm dev
+   ```
+
+The application will be available at `http://localhost:5173`
+
+### Alternative: Local Postgre SQL Database
+
+1. **Install PostgreSQL**: Follow the [official installation guide](https://www.postgresql.org/download/) for your operating system.
+
+2. **Start PostgreSQL**: Ensure the PostgreSQL service is running.
+
+3. **Create a Database**: Use the following command to create a new database:
+   ```bash
+   createdb auth_db
+   ```
+
+4. **Configure Environment Variables**: Update your `.env` file with the local database connection details:
+   ```bash
+   DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+   ```
+
+5. **Run Database Migrations**: Execute the following commands to set up the database schema:
+   ```bash
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm db:push # Push the database schema
+   pnpm db:seed # Seed the database with initial data
+   ```
+
+6. **Start Development Server**: Launch the development server with:
    ```bash
    pnpm dev
    ```
@@ -154,7 +205,7 @@ GOOGLE_CLIENT_ID=...
 
 **New Structure (Current):**
 
-**Root `.env.local`:**
+**Root `.env`:**
 ```bash
 # Better Auth Configuration
 BETTER_AUTH_SECRET=your-super-secret-key-here
@@ -184,7 +235,7 @@ APP_VERSION=1.0.0
 FRONTEND_URL=http://localhost:5173
 ```
 
-**Database `db/.env.local`:**
+**Database `db/.env`:**
 ```bash
 # Database Configuration
 DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
@@ -200,7 +251,7 @@ AUDIT_RETENTION_DAYS=2555
 # manager@dev:temp123 (manager role)
 ```
 
-**Infrastructure `infra/.env.local`:**
+**Infrastructure `infra/.env`:**
 ```bash
 # Environment Configuration
 ENVIRONMENT=development
@@ -233,25 +284,25 @@ SUPABASE_FUNCTIONS_URL=https://supabase-project.supabase.co/functions/v1
 
 1. **Backup existing configuration:**
    ```bash
-   cp .env.local .env.backup
+   cp .env .env.backup
    ```
 
 2. **Create new structure:**
    ```bash
-   cp .env.example .env.local
-   cp db/.env.example db/.env.local
-   cp infra/.env.example infra/.env.local
+   cp .env.example .env
+   cp db/.env.example db/.env
+   cp infra/.env.example infra/.env
    ```
 
 3. **Migrate variables to appropriate files:**
-   - Move database-related variables to `db/.env.local`
-   - Move Cloudflare/Supabase variables to `infra/.env.local`
-   - Keep auth and server variables in root `.env.local`
+   - Move database-related variables to `db/.env`
+   - Move Cloudflare/Supabase variables to `infra/.env`
+   - Keep auth and server variables in root `.env`
 
 4. **Update scripts and imports:**
-   - Database scripts now read from `db/.env.local`
-   - Infrastructure scripts read from `infra/.env.local`
-   - Main application reads from root `.env.local`
+   - Database scripts now read from `db/.env`
+   - Infrastructure scripts read from `infra/.env`
+   - Main application reads from root `.env`
 
 </details>
 
@@ -439,9 +490,9 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
    ```bash
    cd .worktrees/feature/123
    pnpm install
-   cp .env.example .env.local
-   cp db/.env.example db/.env.local
-   cp infra/.env.example infra/.env.local
+   cp .env.example .env
+   cp db/.env.example db/.env
+   cp infra/.env.example infra/.env
    ```
 
 4. **Make changes following our coding standards:**
