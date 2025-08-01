@@ -48,7 +48,41 @@ For more information about using a codespace for working on GitHub documentation
 
 #### Make changes locally
 
-1. Fork the repository.
+1. **Fork the repository**
+   - Fork the repository to your GitHub account
+   - Clone your fork locally
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+
+   ⚠️ **Important**: As of v0.1.0, environment variables are separated by component:
+
+   ```bash
+   # Copy template files for all components
+   cp .env.example .env.local
+   cp db/.env.example db/.env.local
+   cp infra/.env.example infra/.env.local
+   ```
+
+   Configure each file with appropriate values:
+   - **`.env.local`**: Authentication, server settings
+   - **`db/.env.local`**: Database URL, audit settings
+   - **`infra/.env.local`**: Cloudflare, Supabase configuration
+
+   See [Environment Variables Migration Guide](docs/en/dev/environment-variables-migration.md) for detailed setup instructions.
+
+4. **Verify setup**
+   ```bash
+   # Test database connection
+   pnpm db:generate
+
+   # Start development servers
+   pnpm dev
+   ```
 - Using GitHub Desktop:
   - [Getting started with GitHub Desktop](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/getting-started-with-github-desktop) will guide you through setting up Desktop.
   - Once Desktop is set up, you can use it to [fork the repo](https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/cloning-and-forking-repositories-from-github-desktop)!
