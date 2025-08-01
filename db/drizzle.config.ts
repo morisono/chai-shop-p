@@ -1,17 +1,16 @@
 import { defineConfig } from 'drizzle-kit';
+import { getEnv, getEnvBoolean, validate } from './lib/environment';
 
-
-if (!process.env.DATABASE_URL!) {
-  throw new Error("databaseUrl is not defined. Make sure server.env is loaded.")
-}
+// Validate required environment variables
+validate.required(['DATABASE_URL']);
 
 export default defineConfig({
-  out: './db/migrations',
-  schema: './db/models/**/*.ts',  // or ./db/orm/**/*.ts
+  out: './migrations',
+  schema: './orm/schema.ts',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? '',
+    url: getEnv('DATABASE_URL'),
   },
-  verbose: true,
-  strict: true,
+  verbose: getEnvBoolean('DRIZZLE_VERBOSE', true),
+  strict: getEnvBoolean('DRIZZLE_STRICT', true),
 });

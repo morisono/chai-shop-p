@@ -5,7 +5,7 @@ type User = {
   password: string
   age: number
   createdAt: Date
-  role: "user" | "admin"
+  role: "admin" | "user" | "premium" | "tester" | "guest"
 }
 
 export const messages = [
