@@ -1,23 +1,23 @@
-<div align="center">
+<d[English](../en/README.md) | [한국어](../ko/README.md) | [日本語](README.md) | [简体中文](../zh/README.md)v align="center">
 
 [English](../README.md) | [한국어](../ko/README.md) | [日본語](README.md) | [简体中文](../zh/README.md)
 
-### MoleQ | SaaS ボイラープレート前駆体
+### Taj Chai Web Shop | SaaS ボイラープレート前駆体
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/vite-saas-boilerplate?style=social)](https://github.com/yourusername/vite-saas-boilerplate/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/vite-saas-boilerplate?style=social)](https://github.com/yourusername/vite-saas-boilerplate/network/members)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/vite-saas-boilerplate/ci.yml?branch=main)](https://github.com/yourusername/vite-saas-boilerplate/actions)
+[![GitHub stars](https://img.shields.io/github/stars/morisono/chai-shop-p?style=social)](https://github.com/morisono/chai-shop-p/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/morisono/chai-shop-p?style=social)](https://github.com/morisono/chai-shop-p/network/members)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/morisono/chai-shop-p/ci.yml?branch=main)](https://github.com/morisono/chai-shop-p/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/github/package-json/v/yourusername/vite-saas-boilerplate)](package.json)
+[![Version](https://img.shields.io/github/package-json/v/morisono/chai-shop-p)](package.json)
 
-[ドキュメント](https://github.com/yourusername/vite-saas-boilerplate/wiki) | [デモ](https://vite-saas-demo.vercel.app) | [バグ報告](https://github.com/yourusername/vite-saas-boilerplate/issues) | [機能リクエスト](https://github.com/yourusername/vite-saas-boilerplate/issues)
+[ドキュメント](https://github.com/morisono/chai-shop-p/wiki) | [デモ](https://vite-saas-demo.workers.dev) | [バグ報告](https://github.com/morisono/chai-shop-p/issues) | [機能リクエスト](https://github.com/morisono/chai-shop-p/issues)
 
 </div>
 
 
 ## 説明
 
-MoleQはViteとReactで構築された、モダンでプロダクション対応のSaaSボイラープレートで、迅速な開発とスケーラビリティを目的として設計されています。この包括的なスターターキットには、認証、決済処理、データベース統合、Cloudflare Workersの展開設定が含まれています。
+Taj Chai Web Shopは、ViteとReactで構築されたモダンでプロダクション対応のSaaSボイラープレートで、迅速な開発とスケーラビリティを目的として設計されています。この包括的なスターターキットには、認証、決済処理、データベース統合、Cloudflare Workersの展開設定が含まれています。
 
 ## 動機
 

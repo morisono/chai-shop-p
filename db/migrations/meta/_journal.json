@@ -15,6 +15,27 @@
       "when": 1753652543764,
       "tag": "0001_crazy_supernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754047240700,
+      "tag": "0002_wooden_thundra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1754048442439,
+      "tag": "0003_even_luke_cage",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1754048624259,
+      "tag": "0004_familiar_sentry",
+      "breakpoints": true
     }
   ]
 }
