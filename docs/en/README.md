@@ -366,7 +366,7 @@ Database operations using Drizzle ORM:
 ```typescript
 // Example database query
 import { db } from '@/db'
-import { users } from '@/db/models/users'
+import { users } from '@/db/orm/users'
 
 // Create user
 const newUser = await db.insert(users).values({
