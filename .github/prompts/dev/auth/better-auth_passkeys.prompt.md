@@ -1,10 +1,10 @@
 ---
 mode: 'agent'
 tools: ['githubRepo', 'codebase']
-description: 'Refactor authentication to use Better Auth, SimpleWebAuthn, Drizzle ORM, Vite.js, and deploy on Cloudflare Workers/Pages'
+description: 'Design authentication to use Better Auth, SimpleWebAuthn, Drizzle ORM, Vite.js, and deploy on Cloudflare Workers/Pages'
 ---
 
-Refactor the existing authentication to use Better Auth (OAuth), SimpleWebAuthn (Passkeys), Drizzle ORM, Vite.js and deploy on Cloudflare Workers/Pages, ensuring compatibility with your current User model and database schema.
+Design a authentication workflow seamlessly integrated with the existing UI to use Better Auth (OAuth), SimpleWebAuthn (Passkeys), Drizzle ORM, Vite.js and deploy on Cloudflare Workers/Pages, ensuring compatibility with your current User model and database schema.
 
 Implement environment-specific security posture and automated compliance for auth flows.
 - Dev: mock auth accepting (e.g. “admin@dev:temp123”, `DEBUG_TOKEN_*`, `SESSION_DEV_*`), simulating RBAC roles & expiry. Redact secrets in logs.
@@ -57,8 +57,8 @@ authentication:
         - "company.com"
     twitter:
       enabled: true
-      client_id: "${TWITTER_CLIENT_ID}"
-      client_secret: "${TWITTER_CLIENT_SECRET}"
+      client_id: "${X_TWITTER_CLIENT_ID}"
+      client_secret: "${X_TWITTER_CLIENT_SECRET}"
       scope:
         - "tweet.read"
         - "users.read"

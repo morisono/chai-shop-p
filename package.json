@@ -6,29 +6,72 @@
   "workspaces": [
     "apps/frontend",
     "apps/backend",
+    "db",
     "tests",
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=apps/frontend",
-    "build": "npm run build --workspace=apps/frontend && npm run build --workspace=apps/backend",
-    "build:client": "npm run build --workspace=apps/frontend",
-    "build:server": "npm run build --workspace=apps/backend",
-    "build:drizzle": "npm run build --workspace=packages/drizzle",
-    "build:zod": "npm run build --workspace=packages/zod",
-    "start": "npm run start --workspace=apps/frontend",
-    "lint": "eslint . --ext .ts,.tsx",
-    "test": "vitest --config tests/unit/vitest.config.mts",
-    "test:e2ee": "npm run test --workspace=tests/e2e",
-    "test:e2e": "playwright test --config tests/e2e/playwright.config.ts",
-    "drizzle:generate": "npm run generate --workspace=db",
-    "drizzle:migrate": "npm run migrate --workspace=db",
-    "drizzle:studio": "npm run studio --workspace=db",
-    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'package-lock.json' -type f -delete && find . -name 'yarn.lock' -type f -delete && find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
+    "dev:client": "npm run dev -w apps/frontend",
+    "dev:server": "npm run dev -w apps/backend",
+    "dev": "run-p dev:*",
+    "build:client": "npm run build -w apps/frontend",
+    "build:server": "npm run build -w apps/backend",
+    "build:drizzle": "npm run build -w db",
+    "build:zod": "npm run build -w packages/validation/zod",
+    "build": "run-s build:*",
+    "start:client": "npm run start -w apps/frontend",
+    "start:server": "npm run start -w apps/backend",
+    "start": "run-p start:*",
+    "lint": "biome lint src",
+    "lint:fix": "biome lint --write src",
+    "format": "biome format --write src",
+    "format:check": "biome format src",
+    "test": "npm run test -w tests",
+    "check-types": "tsc --noEmit --pretty",
+    "check:unused": "ts-prune --project tsconfig.json",
+    "check:deps": "madge --circular --extensions ts apps",
+    "check:all": "run-s check:*",
+    "db:generate": "npm run generate -w db",
+    "db:migrate": "npm run migrate -w db",
+    "db:studio": "npm run studio -w db",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "storybook:serve": "http-server storybook-static --port 6006 --silent",
+    "serve-storybook": "run-s storybook:*",
+    "test-storybook:ci": "start-server-and-test serve-storybook http://127.0.0.1:6006 test-storybook",
+    "push": "npm run push -w db",
+    "seed": "npm run seed -w db",
+    "clean": "rimraf **/node_modules **/dist **/package-lock.json",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "drizzle-orm": "^0.41.0",
+    "http-server": "^14.1.1",
+    "storybook": "^8.5.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.1.3",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "madge": "^8.0.0",
     "npm-run-all": "^4.1.5",
-    "wait-port": "^1.1.0",
-    "pnpm": "^10.8.1"
+    "pnpm": "^10.8.1",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "ts-prune": "^0.10.3",
+    "tsc-alias": "^1.8.16",
+    "wait-port": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "lint-staged": {
+    "apps/src/**/*.{ts,tsx}": [
+      "biome check --write --no-errors-on-unmatched",
+      "biome format --write --no-errors-on-unmatched"
+    ]
   }
 }
