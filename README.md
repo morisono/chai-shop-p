@@ -1,6 +1,6 @@
 <div align="center">
 
-[English](README.md) | [한국어](../ko/README.md) | [日本語](../ja/README.md) | [简体中文](../zh/README.md)
+[English](docs/en/README.md) | [한국어](docs/ko/README.md) | [日本語](docs/ja/README.md) | [简体中文](docs/zh/README.md)
 
 ### Taj Chai Web Shop | SaaS Boilerplate Precursors
 
@@ -14,6 +14,12 @@
 
 </div>
 
+---
+
+**🚨 IMPORTANT: Environment Variables Migration (v0.2.0)**
+If upgrading from v0.1.x, see [MIGRATION.md](MIGRATION.md) for complete migration guide, or run `./verify-env.sh` to check your configuration.
+
+---
 
 ## Description
 
@@ -40,7 +46,7 @@ Designed for flexibility, it empowers users to build freely without constraints.
 - **Data Visualization** - Chart.js, React Table
 - **UI Components** - Radix UI, Framer Motion animations
 
-You can check the full tech stack: [from here](../../.idea/tech_stack.yaml)
+You can check the full tech stack: [from here](.idea/tech_stack.yaml)
 
 ## Installation
 
@@ -110,19 +116,6 @@ You can check the full tech stack: [from here](../../.idea/tech_stack.yaml)
    AUDIT_FLUSH_INTERVAL=5000
    AUDIT_RETENTION_DAYS=2555
    ```
-
-   **Optional: Configure Cloudflare Hyperdrive (recommended for production)**
-
-   1. Create a Hyperdrive connection:
-      ```bash
-      DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
-      npx wrangler hyperdrive create my-first-hyperdrive --connection-string=$DATABASE_URL
-      ```
-
-   2. Update your `wrangler.toml` with the Hyperdrive ID returned from the command above.
-
-   For more information, see [Hyperdrive documentation](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/).
-
 
 5. **Configure Infrastructure Environment**
 
@@ -205,45 +198,27 @@ You can check the full tech stack: [from here](../../.idea/tech_stack.yaml)
    # Better Auth Configuration
    BETTER_AUTH_SECRET=your-secret-key-here-use-openssl-rand-base64-32
    BETTER_AUTH_BASE_URL=http://localhost:3001
-   BETTER_AUTH_ISSUER_BASE_URL=better-auth-domain
-   BETTER_AUTH_CLIENT_ID=better-auth-client-id
-   BETTER_AUTH_CLIENT_SECRET=better-auth-client-secret
-   BETTER_AUTH_SESSION_SECRET=better-auth-session-secret-key
-   BETTER_AUTH_AUDIENCE=better-auth-audience
    BETTER_AUTH_DOMAIN=better-auth-domain
+
+   # OAuth Providers
+   GITHUB_CLIENT_ID=your-github-client-id
+   GITHUB_CLIENT_SECRET=your-github-client-secret
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   X_TWITTER_CLIENT_ID=your-x-twitter-client-id
+   X_TWITTER_CLIENT_SECRET=your-x-twitter-client-secret
 
    # Stripe Configuration (Development - Test Mode)
    STRIPE_SECRET_KEY=sk_***
    STRIPE_PUBLISHABLE_KEY=pk_***
    STRIPE_WEBHOOK_SECRET=whsec_***
 
-   # Billing Plans (Subscription)
-   BILLING_PLAN_ENV=dev
-   PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID=public-stripe-pro-monthly-plan-id
-   PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID=public-stripe-pro-yearly-plan-id
-   PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID=public-stripe-business-monthly-plan-id
-   PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID=public-stripe-business-yearly-plan-id
-
-   # OAuth Providers
-   GITHUB_CLIENT_ID=your-github-client-id
-   GITHUB_CLIENT_SECRET=your-github-client-secret
-   GITHUB_OAUTH_TOKEN=github-oauth-token
-   GOOGLE_CLIENT_ID=your-google-client-id
-   GOOGLE_CLIENT_SECRET=your-google-client-secret
-   X_TWITTER_CLIENT_ID=your-x-twitter-client-id
-   X_TWITTER_CLIENT_SECRET=your-x-twitter-client-secret
-   APPLE_CLIENT_ID=your-apple-client-id
-   APPLE_CLIENT_SECRET=your-apple-client-secret
-
-   # Passkey Configuration (WebAuthn)
-   RP_ID=localhost
-
-   # Email Configuration (for password reset and verification)
-   EMAIL_FROM=noreply@parampara-chai.com
-   EMAIL_SERVER_USER=your-email-server-user
-   EMAIL_SERVER_PASSWORD=your-email-server-password
-   EMAIL_SERVER_HOST=your-email-server-host
-   EMAIL_SERVER_PORT=587
+   # Security Configuration
+   SESSION_TIMEOUT=900
+   REFRESH_TOKEN_LIFETIME=86400
+   SECURITY_LEVEL=low
+   DEBUG_AUTH=true
+   MFA_REQUIRED=false
 
    # AI Configuration
    OPENAI_API_KEY=openai-api-key
@@ -256,61 +231,16 @@ You can check the full tech stack: [from here](../../.idea/tech_stack.yaml)
    RATE_LIMIT_GLOBAL_WINDOW=60
    RATE_LIMIT_SIGNIN_MAX=5
    RATE_LIMIT_SIGNUP_MAX=3
-
-   # Security Configuration
-   SESSION_TIMEOUT=900
-   REFRESH_TOKEN_LIFETIME=86400
-   SECURITY_LEVEL=low
-   DEBUG_AUTH=true
-   MFA_REQUIRED=false
-
-   # Development Mock Auth Users
-   # Use these credentials for development testing:
-   # admin@dev:temp123 (admin role)
-   # user@dev:temp123 (user role)
-   # manager@dev:temp123 (manager role)
    ```
 
 8. **Run database migrations**
    ```bash
    pnpm db:generate
    pnpm db:migrate
-   pnpm db:push # Push the database schema
-   pnpm db:seed # Seed the database with initial data
+   pnpm db:seed
    ```
 
 9. **Start development server**
-   ```bash
-   pnpm dev
-   ```
-
-The application will be available at `http://localhost:5173`
-
-### Alternative: Local PostgreSQL Database
-
-1. **Install PostgreSQL**: Follow the [official installation guide](https://www.postgresql.org/download/) for your operating system.
-
-2. **Start PostgreSQL**: Ensure the PostgreSQL service is running.
-
-3. **Create a Database**: Use the following command to create a new database:
-   ```bash
-   createdb auth_db
-   ```
-
-4. **Configure Environment Variables**: Update your `db/.env.local` file with the local database connection details:
-   ```bash
-   DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
-   ```
-
-5. **Run Database Migrations**: Execute the following commands to set up the database schema:
-   ```bash
-   pnpm db:generate
-   pnpm db:migrate
-   pnpm db:push # Push the database schema
-   pnpm db:seed # Seed the database with initial data
-   ```
-
-6. **Start Development Server**: Launch the development server with:
    ```bash
    pnpm dev
    ```
@@ -941,7 +871,7 @@ npm version minor
 git merge main
 ```
 
-For more details, see our [Git Flow Rules](../../.github/instructions/git-flow-rules.instructions.md).
+For more details, see our [Git Flow Rules](.github/instructions/git-flow-rules.instructions.md).
 
 </details>
 
@@ -961,7 +891,7 @@ pnpm check:unused       # Find unused code
 pnpm check:deps         # Check circular dependencies
 ```
 
-For more details, see our [Project Rules](../../.github/prompts/essential/project_rules.yaml).
+For more details, see our [Project Rules](.github/prompts/essential/project_rules.yaml).
 
 </details>
 

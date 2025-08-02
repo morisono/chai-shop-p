@@ -18,7 +18,7 @@ const config: KnipConfig = {
   ],
   // Binaries to ignore during analysis
   ignoreBinaries: [
-    'production', // False positive raised with dotenv-cli
+    'production', // False positive raised
   ],
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/g)].join('\n'),

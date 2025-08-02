@@ -1,4 +1,4 @@
-<d[English](../en/README.md) | [한국어](README.md) | [日本語](../ja/README.md) | [简体中文](../zh/README.md)v align="center">
+<div align="center">
 
 [English](../README.md) | [한국어](README.md) | [日본語](../ja/README.md) | [简体中文](../zh/README.md)
 
@@ -67,18 +67,218 @@ Taj Chai Web Shop은 Vite와 React로 구축된 현대적이고 프로덕션 준
    ```
 
 3. **환경 변수 설정**
+
+   **프론트엔드 설정:**
    ```bash
+   cd apps/frontend/
    cp .env.example .env.local
    ```
-   설정에 맞게 `.env.local`을 편집하세요
 
-4. **데이터베이스 마이그레이션 실행**
+   **백엔드 설정:**
    ```bash
-   pnpm db:migrate
-   pnpm db:seed
+   cd apps/backend/
+   cp .env.example .env.local
    ```
 
-5. **개발 서버 시작**
+   **데이터베이스 설정:**
+   ```bash
+   cp db/.env.example db/.env.local
+   ```
+
+   **인프라스트럭처 설정:**
+   ```bash
+   cp infra/.env.example infra/.env.local
+   ```
+
+   각 `.env.local` 파일을 특정 설정으로 편집하세요.
+
+4. **데이터베이스 환경 설정**
+
+   `db/.env.local`에서 다음을 설정:
+   ```bash
+   # 데이터베이스 설정
+   DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+
+   # 개발용 모의 인증 사용자
+   # 개발 테스트용 인증 정보:
+   # admin@dev:temp123 (관리자 역할)
+   # user@dev:temp123 (사용자 역할)
+   # manager@dev:temp123 (매니저 역할)
+
+   # 감사 설정
+   AUDIT_BATCH_SIZE=100
+   AUDIT_FLUSH_INTERVAL=5000
+   AUDIT_RETENTION_DAYS=2555
+   ```
+
+   **선택사항: Cloudflare Hyperdrive 설정 (프로덕션 권장)**
+
+   1. Hyperdrive 연결 생성:
+      ```bash
+      DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+      npx wrangler hyperdrive create my-first-hyperdrive --connection-string=$DATABASE_URL
+      ```
+
+   2. 위 명령에서 반환된 Hyperdrive ID로 `wrangler.toml`을 업데이트하세요.
+
+   자세한 내용은 [Hyperdrive 문서](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/)를 참조하세요.
+
+5. **인프라스트럭처 환경 설정**
+
+   `infra/.env.local`에서 다음을 설정:
+   ```bash
+   # 환경 설정
+   ENVIRONMENT=development
+
+   # Cloudflare 설정
+   CF_ACCOUNT_ID=your-cloudflare-account-id
+   CF_KV_NAMESPACE=your-kv-namespace-id
+   CF_API_TOKEN=your-cloudflare-api-token
+   CF_R2_ACCESS_KEY_ID=your-r2-access-key
+   CF_R2_SECRET_ACCESS_KEY=your-r2-secret-key
+   CF_R2_BUCKET=auth-storage
+   CF_WORKERS_API_TOKEN=cf-workers-api-token
+
+   # 외부 로깅 (프로덕션용)
+   CF_LOGPUSH_ENDPOINT=https://logs.example.com/cloudflare
+   CF_LOGPUSH_TOKEN=your-logpush-token
+   SPLUNK_ENDPOINT=https://splunk.example.com/services/collector
+   SPLUNK_TOKEN=your-splunk-token
+
+   # 모니터링 및 알림
+   ALERT_WEBHOOK=https://alerts.example.com/webhook
+
+   # Supabase 설정
+   SUPABASE_URL=supabase-url
+   SUPABASE_ANON_KEY=supabase-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=supabase-service-role-key
+   SUPABASE_FUNCTIONS_URL=https://saas-app.supabase.co/functions/v1
+   ```
+
+6. **프론트엔드 환경 설정**
+
+   `apps/frontend/.env.local`에서 다음을 설정:
+   ```bash
+   # Better Auth 설정
+   VITE_BETTER_AUTH_URL=http://localhost:3001
+
+   # 애플리케이션 설정
+   VITE_APP_NAME=Your App Name
+   VITE_NODE_ENV=development
+
+   # 백엔드 API URL
+   VITE_API_URL=http://localhost:3001
+
+   # 프론트엔드 설정
+   VITE_FRONTEND_URL=http://localhost:5173
+
+   # OAuth 리다이렉트 URL (클라이언트 측 참조용)
+   VITE_GITHUB_REDIRECT_URL=http://localhost:3001/api/auth/callback/github
+   VITE_GOOGLE_REDIRECT_URL=http://localhost:3001/api/auth/callback/google
+   VITE_APPLE_REDIRECT_URL=http://localhost:3001/api/auth/callback/apple
+   VITE_X-TWITTER_REDIRECT_URL=http://localhost:3001/api/auth/callback/x-twitter
+
+   # 개발 설정
+   VITE_DEV_MODE=true
+   ```
+
+7. **백엔드 환경 설정**
+
+   `apps/backend/.env.local`에서 다음을 설정:
+   ```bash
+   # 애플리케이션 설정
+   APP_NAME=Your Saas Name
+   NODE_ENV=development
+   FRONTEND_URL=http://localhost:5173
+
+   # 서버 설정
+   PORT=3001
+   HOST=0.0.0.0
+   LOG_LEVEL=info
+   APP_VERSION=1.0.0
+   COOKIE_DOMAIN=localhost
+
+   # 데이터베이스 설정
+   DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+
+   # Better Auth 설정
+   BETTER_AUTH_SECRET=your-secret-key-here-use-openssl-rand-base64-32
+   BETTER_AUTH_BASE_URL=http://localhost:3001
+   BETTER_AUTH_DOMAIN=better-auth-domain
+
+   # OAuth 제공업체
+   GITHUB_CLIENT_ID=your-github-client-id
+   GITHUB_CLIENT_SECRET=your-github-client-secret
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   X_TWITTER_CLIENT_ID=your-x-twitter-client-id
+   X_TWITTER_CLIENT_SECRET=your-x-twitter-client-secret
+
+   # Stripe 설정 (개발 - 테스트 모드)
+   STRIPE_SECRET_KEY=sk_***
+   STRIPE_PUBLISHABLE_KEY=pk_***
+   STRIPE_WEBHOOK_SECRET=whsec_***
+
+   # 보안 설정
+   SESSION_TIMEOUT=900
+   REFRESH_TOKEN_LIFETIME=86400
+   SECURITY_LEVEL=low
+   DEBUG_AUTH=true
+   MFA_REQUIRED=false
+
+   # AI 설정
+   OPENAI_API_KEY=openai-api-key
+   ANTHROPIC_API_KEY=anthropic-api-key
+   GEMINI_API_KEY=gemini-api-key
+   DEEPSEEK_API_KEY=deepseek-api-key
+
+   # 속도 제한 설정
+   RATE_LIMIT_GLOBAL_MAX=100
+   RATE_LIMIT_GLOBAL_WINDOW=60
+   RATE_LIMIT_SIGNIN_MAX=5
+   RATE_LIMIT_SIGNUP_MAX=3
+   ```
+
+8. **데이터베이스 마이그레이션 실행**
+   ```bash
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm db:push # 데이터베이스 스키마 푸시
+   pnpm db:seed # 초기 데이터로 데이터베이스 시드
+   ```
+
+9. **개발 서버 시작**
+   ```bash
+   pnpm dev
+   ```
+
+애플리케이션은 `http://localhost:5173`에서 사용할 수 있습니다
+
+### 대안: 로컬 PostgreSQL 데이터베이스
+
+1. **PostgreSQL 설치**: 운영 체제에 맞는 [공식 설치 가이드](https://www.postgresql.org/download/)를 따르세요.
+
+2. **PostgreSQL 시작**: PostgreSQL 서비스가 실행 중인지 확인하세요.
+
+3. **데이터베이스 생성**: 다음 명령을 사용하여 새 데이터베이스를 생성하세요:
+   ```bash
+   createdb auth_db
+   ```
+
+4. **환경 변수 설정**: 로컬 데이터베이스 연결 세부 정보로 `db/.env.local` 파일을 업데이트하세요:
+   ```bash
+   DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+   ```
+
+5. **데이터베이스 마이그레이션 실행**: 다음 명령을 실행하여 데이터베이스 스키마를 설정하세요:
+   ```bash
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm db:push # 데이터베이스 스키마 푸시
+   pnpm db:seed # 초기 데이터로 데이터베이스 시드
+   ```
+
+6. **개발 서버 시작**: 다음 명령으로 개발 서버를 시작하세요:
    ```bash
    pnpm dev
    ```
@@ -87,6 +287,222 @@ Taj Chai Web Shop은 Vite와 React로 구축된 현대적이고 프로덕션 준
 
 </details>
 
+## 환경 변수 마이그레이션 가이드
+
+### 최신 변경사항 (v0.2.0)
+
+**⚠️ 주요 변경사항**: 환경 변수가 더 나은 컴포넌트 분리와 보안을 위해 재구성되었습니다.
+
+<details><summary>이전 버전에서의 마이그레이션</summary>
+
+**이전 구조 (deprecated - v0.1.x):**
+```bash
+# 단일 .env 파일의 모든 변수
+DATABASE_URL=...
+CF_ACCOUNT_ID=...
+GOOGLE_CLIENT_ID=...
+BETTER_AUTH_SECRET=...
+# ... 모든 다른 변수가 혼재
+```
+
+**새로운 구조 (현재 - v0.2.0+):**
+
+**프론트엔드 환경 (`apps/frontend/.env.local`):**
+```bash
+# Better Auth 설정
+VITE_BETTER_AUTH_URL=http://localhost:3001
+
+# 애플리케이션 설정
+VITE_APP_NAME=Your App Name
+VITE_NODE_ENV=development
+
+# 백엔드 API URL
+VITE_API_URL=http://localhost:3001
+VITE_FRONTEND_URL=http://localhost:5173
+
+# OAuth 리다이렉트 URL (클라이언트 측 참조용)
+VITE_GITHUB_REDIRECT_URL=http://localhost:3001/api/auth/callback/github
+VITE_GOOGLE_REDIRECT_URL=http://localhost:3001/api/auth/callback/google
+VITE_APPLE_REDIRECT_URL=http://localhost:3001/api/auth/callback/apple
+VITE_X-TWITTER_REDIRECT_URL=http://localhost:3001/api/auth/callback/x-twitter
+
+# 개발 설정
+VITE_DEV_MODE=true
+```
+
+**백엔드 환경 (`apps/backend/.env.local`):**
+```bash
+# 애플리케이션 설정
+APP_NAME=Your Saas Name
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+
+# 서버 설정
+PORT=3001
+HOST=0.0.0.0
+LOG_LEVEL=info
+APP_VERSION=1.0.0
+COOKIE_DOMAIN=localhost
+
+# 데이터베이스 설정
+DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+
+# Better Auth 설정
+BETTER_AUTH_SECRET=your-secret-key-here-use-openssl-rand-base64-32
+BETTER_AUTH_BASE_URL=http://localhost:3001
+BETTER_AUTH_DOMAIN=better-auth-domain
+
+# OAuth 제공업체
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+X_TWITTER_CLIENT_ID=your-x-twitter-client-id
+X_TWITTER_CLIENT_SECRET=your-x-twitter-client-secret
+
+# Stripe 설정 (개발 - 테스트 모드)
+STRIPE_SECRET_KEY=sk_***
+STRIPE_PUBLISHABLE_KEY=pk_***
+STRIPE_WEBHOOK_SECRET=whsec_***
+
+# 보안 설정
+SESSION_TIMEOUT=900
+REFRESH_TOKEN_LIFETIME=86400
+SECURITY_LEVEL=low
+DEBUG_AUTH=true
+MFA_REQUIRED=false
+
+# AI 설정
+OPENAI_API_KEY=openai-api-key
+ANTHROPIC_API_KEY=anthropic-api-key
+GEMINI_API_KEY=gemini-api-key
+DEEPSEEK_API_KEY=deepseek-api-key
+
+# 속도 제한 설정
+RATE_LIMIT_GLOBAL_MAX=100
+RATE_LIMIT_GLOBAL_WINDOW=60
+RATE_LIMIT_SIGNIN_MAX=5
+RATE_LIMIT_SIGNUP_MAX=3
+```
+
+**데이터베이스 환경 (`db/.env.local`):**
+```bash
+# 데이터베이스 설정
+DATABASE_URL=postgresql://user:password@localhost:5432/auth_db
+
+# 개발용 모의 인증 사용자
+# 개발 테스트용 인증 정보:
+# admin@dev:temp123 (관리자 역할)
+# user@dev:temp123 (사용자 역할)
+# manager@dev:temp123 (매니저 역할)
+
+# 감사 설정
+AUDIT_BATCH_SIZE=100
+AUDIT_FLUSH_INTERVAL=5000
+AUDIT_RETENTION_DAYS=2555
+```
+
+**인프라스트럭처 환경 (`infra/.env.local`):**
+```bash
+# 환경 설정
+ENVIRONMENT=development
+
+# Cloudflare 설정
+CF_ACCOUNT_ID=your-cloudflare-account-id
+CF_KV_NAMESPACE=your-kv-namespace-id
+CF_API_TOKEN=your-cloudflare-api-token
+CF_R2_ACCESS_KEY_ID=your-r2-access-key
+CF_R2_SECRET_ACCESS_KEY=your-r2-secret-key
+CF_R2_BUCKET=auth-storage
+CF_WORKERS_API_TOKEN=cf-workers-api-token
+
+# 외부 로깅 (프로덕션용)
+CF_LOGPUSH_ENDPOINT=https://logs.example.com/cloudflare
+CF_LOGPUSH_TOKEN=your-logpush-token
+SPLUNK_ENDPOINT=https://splunk.example.com/services/collector
+SPLUNK_TOKEN=your-splunk-token
+
+# 모니터링 및 알림
+ALERT_WEBHOOK=https://alerts.example.com/webhook
+
+# Supabase 설정
+SUPABASE_URL=supabase-url
+SUPABASE_ANON_KEY=supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=supabase-service-role-key
+SUPABASE_FUNCTIONS_URL=https://saas-app.supabase.co/functions/v1
+```
+
+**마이그레이션 단계:**
+
+1. **기존 설정 백업:**
+   ```bash
+   # 이전 설정 백업
+   cp .env .env.backup.v0.1.x
+   cp .env.local .env.local.backup.v0.1.x
+   ```
+
+2. **새로운 디렉터리별 구조 생성:**
+   ```bash
+   # 프론트엔드 설정
+   cd apps/frontend/
+   cp .env.example .env.local
+
+   # 백엔드 설정
+   cd ../backend/
+   cp .env.example .env.local
+
+   # 데이터베이스 설정
+   cd ../../db/
+   cp .env.example .env.local
+
+   # 인프라스트럭처 설정
+   cd ../infra/
+   cp .env.example .env.local
+   cd ..
+   ```
+
+3. **변수를 적절한 파일로 마이그레이션:**
+   - **프론트엔드 변수**: `VITE_*` 변수를 `apps/frontend/.env.local`로 이동
+   - **백엔드 변수**: 인증, 서버, API 변수를 `apps/backend/.env.local`로 이동
+   - **데이터베이스 변수**: `DATABASE_URL`과 감사 설정을 `db/.env.local`로 이동
+   - **인프라스트럭처 변수**: Cloudflare와 Supabase 변수를 `infra/.env.local`로 이동
+
+4. **스크립트와 설정 참조 업데이트:**
+   - 데이터베이스 스크립트는 `db/.env.local`에서 읽기
+   - 인프라스트럭처 스크립트는 `infra/.env.local`에서 읽기
+   - 프론트엔드 빌드 프로세스는 `apps/frontend/.env.local`에서 읽기
+   - 백엔드 애플리케이션은 `apps/backend/.env.local`에서 읽기
+
+5. **설정 로딩 확인:**
+   ```bash
+   # 프론트엔드 설정 테스트
+   cd apps/frontend && pnpm dev:client
+
+   # 백엔드 설정 테스트
+   cd apps/backend && pnpm dev:server
+
+   # 데이터베이스 연결 테스트
+   pnpm db:studio
+   ```
+
+**⚠️ 사용 중단된 변수 (v0.1.x 설정에서 제거):**
+
+v0.1.x의 다음 변수들은 현재 사용 중단되었으며 제거해야 합니다:
+- `BETTER_AUTH_AUDIENCE` (`BETTER_AUTH_DOMAIN`으로 대체)
+- `SESSION_SECRET` (`BETTER_AUTH_SESSION_SECRET`으로 이름 변경)
+- `PUBLIC_STRIPE_*` (`PUBLIC_` 접두사를 제거하도록 이름 변경)
+- 루트 레벨 `DATABASE_URL` (`db/.env.local`로 이동)
+
+**하위 호환성:**
+
+마이그레이션 중에 v0.1.x 배포와의 호환성을 유지해야 하는 경우:
+
+1. 배포 설정에서 이전 변수를 임시로 유지
+2. CI/CD 파이프라인에서 환경별 오버라이드 사용
+3. 사용 중단된 변수를 제거하기 전에 스테이징 환경에서 철저히 테스트
+4. 새로운 파일 위치를 참조하도록 배포 스크립트 업데이트
+
+</details>
 
 ## 사용법
 

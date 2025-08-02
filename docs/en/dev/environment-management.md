@@ -6,7 +6,7 @@ This project implements a zero-dependency, platform-agnostic environment variabl
 
 ## Features
 
-- ✅ **Zero Dependencies**: No need for `dotenv` or other external packages
+- ✅ **Zero Dependencies**: No need other external packages
 - ✅ **Component Separation**: Separate environment files for database, infrastructure, and app
 - ✅ **Platform Agnostic**: Works with Cloudflare, Vercel, Netlify, Railway, and local development
 - ✅ **Type Safe**: Full TypeScript support with type validation
