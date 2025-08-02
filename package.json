@@ -17,7 +17,7 @@
     "build:client": "npm run build -w apps/frontend",
     "build:server": "npm run build -w apps/backend",
     "build:drizzle": "npm run build -w db",
-    "build:zod": "npm run build -w packages/validation/zod",
+    "build:zod": "cd packages/validation/zod && npm run build",
     "build": "run-s build:*",
     "start:client": "npm run start -w apps/frontend",
     "start:server": "npm run start -w apps/backend",
